@@ -1,0 +1,91 @@
+@startuml diagrama_classes
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam defaultFontSize 14
+skinparam nodesep 40
+skinparam ranksep 50
+skinparam class {
+  BackgroundColor #FFFFFF
+  BorderColor #2F3A4A
+  ArrowColor #2F3A4A
+}
+hide circle
+hide empty members
+
+abstract class Usuario {
+  - nome : String
+  - email : String
+  - senha : String
+  + autenticar(senha) : boolean
+}
+class UsuarioFinal {
+  + conectarConta(instituicao)
+  + gerarRelatorio(inicio, fim) : Relatorio
+}
+class Administrador {
+  + consultarLogs() : List<LogAuditoria>
+}
+class InstituicaoFinanceira {
+  - nome : String
+  - codigo : String
+}
+class Conexao {
+  - status : String
+  - token : String
+  - dataExpiracao : Date
+  + autorizar()
+  + atualizarDados()
+  + revogar()
+}
+class ContaFinanceira {
+  - tipo : String
+  - numero : String
+  - saldo : Decimal
+  + consultarSaldo() : Decimal
+}
+class Transacao {
+  - data : Date
+  - valor : Decimal
+  - descricao : String
+  - tipo : String
+  + categorizar(categoria)
+}
+class Categoria {
+  - nome : String
+}
+class Dashboard {
+  - saldoTotal : Decimal
+  + gerarGraficos()
+}
+class Relatorio {
+  - inicio : Date
+  - fim : Date
+  - totalReceitas : Decimal
+  - totalDespesas : Decimal
+  + exportar(formato)
+}
+class LogAuditoria {
+  - dataHora : DateTime {readOnly}
+  - acao : String {readOnly}
+  - sucesso : boolean {readOnly}
+}
+class Servico {
+  - nome : String
+  - status : String
+  - ultimaVerificacao : DateTime
+}
+
+Usuario <|-- UsuarioFinal
+Usuario <|-- Administrador
+UsuarioFinal "1" -- "0..*" Conexao : possui >
+Conexao "0..*" -- "1" InstituicaoFinanceira : com >
+Conexao "1" *-- "1..*" ContaFinanceira : acessa >
+ContaFinanceira "0..1" -- "0..*" Transacao : origem >
+UsuarioFinal "1" -- "0..*" Transacao : registra >
+Transacao "0..*" -- "0..1" Categoria : pertence a >
+UsuarioFinal "1" -- "1" Dashboard : visualiza >
+Dashboard "1" o-- "0..*" ContaFinanceira : consolida >
+UsuarioFinal "1" -- "0..*" Relatorio : gera >
+Usuario "0..1" -- "0..*" LogAuditoria : origina >
+Administrador "1..*" -- "0..*" Servico : monitora >
+@enduml

@@ -1,0 +1,1712 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Protótipo UniBank</title>
+<meta name="description" content="Protótipo navegável do UniBank, sistema de gestão financeira integrado via Open Finance (Grupo 7, Ponto e Vírgula).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+<style>
+/* Layout: app shell com barra lateral petróleo (desktop) e barra inferior (celular); conteúdo em grade de 12 colunas. */
+:root {
+  --bg: #F2F5F4;
+  --surface: #FFFFFF;
+  --surface-2: #E9EFED;
+  --line: #D5DFDC;
+  --fg: #0E2326;
+  --fg-2: #455D5C;
+  --muted: #677B79;
+  --brand: #0B3F44;
+  --brand-2: #12545A;
+  --brand-ink: #E6F1EF;
+  --brand-muted: #9DBDB9;
+  --accent: #0D6B65;
+  --accent-hover: #0A5853;
+  --accent-fg: #FFFFFF;
+  --accent-soft: #DDEEEC;
+  --ipe: #F2B705;
+  --ipe-ink: #2E2300;
+  --pos: #0A7139;
+  --pos-bg: #E2F3E8;
+  --neg: #B42318;
+  --neg-bg: #FCE9E7;
+  --warn: #8A4E00;
+  --warn-bg: #FFF2D4;
+  --info-bg: #E2EFEE;
+  --annot: #6A4FC9;
+  --overlay: rgba(9, 28, 30, 0.48);
+  --shadow: 0 1px 2px rgba(14, 35, 38, 0.06), 0 8px 24px rgba(14, 35, 38, 0.08);
+  --c1: #2a78d6; --c2: #eb6834; --c3: #1baf7a; --c4: #eda100;
+  --c5: #e87ba4; --c6: #008300; --c7: #6250d6; --c8: #e34948;
+  --grid: #E3E9E7;
+  --axis: #BFCBC8;
+  --f-display: "Bricolage Grotesque", "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r-sm: 6px; --r-md: 10px; --r-lg: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A1617; --surface: #102022; --surface-2: #162A2C; --line: #233A3C;
+    --fg: #E4EEED; --fg-2: #A6BCBA; --muted: #86A09D;
+    --brand: #071F22; --brand-2: #0E3135; --brand-ink: #DDEBE9; --brand-muted: #8FB1AD;
+    --accent: #3BB3A7; --accent-hover: #54C4B8; --accent-fg: #052220; --accent-soft: #123735;
+    --ipe: #F5C542; --ipe-ink: #2E2300;
+    --pos: #52C483; --pos-bg: #0F2D1E; --neg: #FF8B80; --neg-bg: #3A1714;
+    --warn: #F3B64C; --warn-bg: #33260B; --info-bg: #11302F; --annot: #A898F0;
+    --overlay: rgba(0, 0, 0, 0.6);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+    --c1: #3987e5; --c2: #d95926; --c3: #199e70; --c4: #c98500;
+    --c5: #d55181; --c6: #008300; --c7: #9085e9; --c8: #e66767;
+    --grid: #1E3335; --axis: #34504F;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A1617; --surface: #102022; --surface-2: #162A2C; --line: #233A3C;
+  --fg: #E4EEED; --fg-2: #A6BCBA; --muted: #86A09D;
+  --brand: #071F22; --brand-2: #0E3135; --brand-ink: #DDEBE9; --brand-muted: #8FB1AD;
+  --accent: #3BB3A7; --accent-hover: #54C4B8; --accent-fg: #052220; --accent-soft: #123735;
+  --ipe: #F5C542; --ipe-ink: #2E2300;
+  --pos: #52C483; --pos-bg: #0F2D1E; --neg: #FF8B80; --neg-bg: #3A1714;
+  --warn: #F3B64C; --warn-bg: #33260B; --info-bg: #11302F; --annot: #A898F0;
+  --overlay: rgba(0, 0, 0, 0.6);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --c1: #3987e5; --c2: #d95926; --c3: #199e70; --c4: #c98500;
+  --c5: #d55181; --c6: #008300; --c7: #9085e9; --c8: #e66767;
+  --grid: #1E3335; --axis: #34504F;
+  color-scheme: dark;
+}
+
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+*, *::before, *::after { box-sizing: border-box; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+button, input, select { font: inherit; color: inherit; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.num { font-variant-numeric: tabular-nums; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.ic { width: 1.15em; height: 1.15em; flex: none; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; vertical-align: -0.2em; }
+
+/* ---------- Botões e campos ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 8px 16px; border-radius: var(--r-md); border: 1px solid transparent; font-weight: 600; font-size: 14px; cursor: pointer; text-decoration: none; white-space: nowrap; transition: background-color .15s, border-color .15s, color .15s; }
+.btn-primary { background: var(--accent); color: var(--accent-fg); }
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-secondary { background: var(--surface); color: var(--fg); border-color: var(--line); }
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-ghost { background: transparent; color: var(--fg-2); }
+.btn-ghost:hover { background: var(--surface-2); color: var(--fg); }
+.btn-danger { background: var(--neg); color: #fff; }
+.btn-danger:hover { filter: brightness(0.92); }
+.btn-danger-ghost { background: transparent; color: var(--neg); border-color: var(--line); }
+.btn-danger-ghost:hover { border-color: var(--neg); background: var(--neg-bg); }
+.btn[disabled], .btn[aria-disabled="true"] { opacity: .5; cursor: not-allowed; }
+.btn-block { width: 100%; }
+.btn-sm { min-height: 34px; padding: 6px 12px; font-size: 13px; }
+.spin { width: 16px; height: 16px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: rot .8s linear infinite; flex: none; }
+@keyframes rot { to { transform: rotate(360deg); } }
+
+.field { display: grid; gap: 6px; }
+.field label, .lbl { font-size: 13px; font-weight: 600; color: var(--fg); }
+.field .hint { font-size: 12.5px; color: var(--muted); }
+.input, .select { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); color: var(--fg); }
+.input:hover, .select:hover { border-color: var(--axis); }
+.input:focus, .select:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
+.input[aria-invalid="true"] { border-color: var(--neg); }
+.field-err { font-size: 13px; color: var(--neg); display: flex; gap: 6px; align-items: center; }
+.pass-wrap { position: relative; }
+.pass-wrap .input { padding-right: 48px; }
+.pass-toggle { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); width: 40px; height: 36px; border: 0; background: transparent; border-radius: 8px; color: var(--muted); cursor: pointer; display: grid; place-items: center; }
+.pass-toggle:hover { color: var(--fg); background: var(--surface-2); }
+.check { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--fg-2); }
+.check input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--accent); flex: none; }
+.seg { display: inline-grid; grid-auto-flow: column; background: var(--surface-2); border-radius: var(--r-md); padding: 3px; gap: 3px; }
+.seg button { border: 0; background: transparent; padding: 8px 18px; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; color: var(--fg-2); }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+
+/* ---------- Avisos ---------- */
+.banner { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-radius: var(--r-md); font-size: 14px; line-height: 1.45; }
+.banner .ic { margin-top: 1px; width: 1.25em; height: 1.25em; }
+.banner > div { min-width: 0; flex: 1; }
+.banner strong { display: block; color: var(--fg); }
+.banner-warn { background: var(--warn-bg); color: var(--fg-2); }
+.banner-warn > .ic { color: var(--warn); }
+.banner-err { background: var(--neg-bg); color: var(--fg-2); }
+.banner-err > .ic { color: var(--neg); }
+.banner-ok { background: var(--pos-bg); color: var(--fg-2); }
+.banner-ok > .ic { color: var(--pos); }
+.banner-info { background: var(--info-bg); color: var(--fg-2); }
+.banner-info > .ic { color: var(--accent); }
+.banner .banner-act { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px; }
+
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+.pill .ic { width: 14px; height: 14px; }
+.pill-ok { background: var(--pos-bg); color: var(--pos); }
+.pill-warn { background: var(--warn-bg); color: var(--warn); }
+.pill-err { background: var(--neg-bg); color: var(--neg); }
+.pill-neutral { background: var(--surface-2); color: var(--fg-2); }
+
+/* Anotação de protótipo (identificação de tela e requisitos) */
+.annot { display: inline-flex; align-items: center; gap: 6px; font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .02em; color: var(--annot); border: 1px dashed var(--annot); border-radius: 6px; padding: 2px 8px; white-space: nowrap; background: transparent; }
+.hide-annot .annot { display: none; }
+.annot-box { border: 1px dashed var(--annot); border-radius: var(--r-md); padding: 10px 12px; font-size: 13px; color: var(--fg-2); display: grid; gap: 8px; }
+.annot-box .annot-title { font-family: var(--f-mono); font-size: 11.5px; color: var(--annot); text-transform: uppercase; letter-spacing: .06em; }
+.annot-box .row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ---------- Logo ---------- */
+.logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+.logo svg { width: 32px; height: 32px; flex: none; }
+.logo span { font-family: var(--f-display); font-weight: 650; font-size: 21px; letter-spacing: -0.01em; }
+
+/* ---------- Telas de acesso ---------- */
+.auth { min-height: 100vh; min-height: 100dvh; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); }
+.auth-brand { background: var(--brand); color: var(--brand-ink); padding-block: 40px; padding-left: max(48px, env(safe-area-inset-left, 0px)); padding-right: 48px; display: flex; flex-direction: column; gap: 40px; justify-content: space-between; }
+.auth-brand h2 { font-family: var(--f-display); font-weight: 600; font-size: clamp(30px, 3.4vw, 44px); line-height: 1.08; letter-spacing: -0.02em; max-width: 14ch; }
+.auth-brand h2 em { font-style: normal; color: var(--ipe); }
+.auth-brand p { color: var(--brand-muted); max-width: 42ch; margin-top: 16px; font-size: 16px; }
+.merge { display: grid; grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1.05fr); align-items: center; max-width: 520px; }
+.merge-src { display: grid; gap: 10px; }
+.merge-src > div { display: flex; align-items: center; gap: 10px; background: var(--brand-2); border-radius: 10px; padding: 8px 12px; font-size: 13.5px; min-width: 0; }
+.merge-src .mono { width: 32px; height: 32px; font-size: 12px; border-radius: 8px; }
+.merge-src b { display: block; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.merge-src small { display: block; font-variant-numeric: tabular-nums; color: var(--brand-muted); font-size: 12.5px; }
+.merge-src > div > span:last-child { min-width: 0; }
+.merge svg.lines { width: 44px; height: 150px; }
+.merge-dst { background: var(--brand-ink); color: var(--brand); border-radius: 14px; padding: 16px 18px; }
+.merge-dst small { display: block; font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; opacity: .75; }
+.merge-dst strong { display: block; font-family: var(--f-display); font-size: 26px; font-weight: 650; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.merge-dst span { font-size: 12.5px; opacity: .75; }
+.auth-foot { font-size: 12.5px; color: var(--brand-muted); display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.auth-main { display: grid; place-items: center; padding-block: 40px; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); background: var(--bg); }
+.auth-card { width: 100%; max-width: 420px; display: grid; gap: 22px; }
+.auth-card h1 { font-family: var(--f-display); font-size: 30px; font-weight: 600; letter-spacing: -0.015em; }
+.auth-card .sub { color: var(--fg-2); margin-top: 6px; }
+.auth-card form { display: grid; gap: 16px; }
+.auth-alt { text-align: center; font-size: 14px; color: var(--fg-2); }
+.rules { display: grid; gap: 4px; font-size: 13px; color: var(--muted); list-style: none; padding: 0; margin: 0; }
+.rules li { display: flex; gap: 6px; align-items: center; }
+.rules li.ok { color: var(--pos); }
+
+/* ---------- Shell ---------- */
+.shell { display: grid; grid-template-columns: 252px minmax(0, 1fr); min-height: 100vh; min-height: 100dvh; background: linear-gradient(90deg, var(--brand) 0 252px, var(--bg) 252px); }
+.sidebar { background: var(--brand); color: var(--brand-ink); position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; gap: 28px; padding: 24px 16px; padding-left: max(16px, env(safe-area-inset-left, 0px)); }
+.sidebar .logo { padding: 0 8px; }
+.sidebar :focus-visible { outline-color: var(--ipe); }
+.nav { display: grid; gap: 4px; }
+.nav-label { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--brand-muted); padding: 0 12px; margin-bottom: 4px; font-weight: 600; }
+.nav a { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px; color: var(--brand-ink); text-decoration: none; font-weight: 500; font-size: 14.5px; position: relative; }
+.nav a:hover { background: var(--brand-2); }
+.nav a[aria-current="page"] { background: var(--brand-2); font-weight: 600; }
+.nav a[aria-current="page"]::before { content: ""; position: absolute; left: -16px; top: 8px; bottom: 8px; width: 4px; border-radius: 0 4px 4px 0; background: var(--ipe); }
+.side-foot { margin-top: auto; display: grid; gap: 12px; border-top: 1px solid var(--brand-2); padding-top: 16px; }
+.who { display: flex; gap: 10px; align-items: center; min-width: 0; }
+.avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--ipe); color: var(--ipe-ink); display: grid; place-items: center; font-weight: 700; font-size: 14px; flex: none; }
+.who div { min-width: 0; }
+.who strong { display: block; font-size: 14px; }
+.who div span { display: block; font-size: 12.5px; color: var(--brand-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.side-foot .btn { justify-content: flex-start; color: var(--brand-ink); }
+.side-foot .btn:hover { background: var(--brand-2); color: var(--brand-ink); }
+
+.main { min-width: 0; display: flex; flex-direction: column; }
+.topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 12px; min-height: 60px; padding-block: 10px; padding-left: max(32px, env(safe-area-inset-left, 0px)); padding-right: max(32px, env(safe-area-inset-right, 0px)); }
+.topbar .logo { display: none; }
+.topbar .crumb { font-size: 14px; color: var(--muted); display: flex; align-items: center; gap: 8px; min-width: 0; }
+.topbar .crumb strong { color: var(--fg); font-weight: 600; }
+.topbar .sync { margin-left: auto; display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--muted); }
+.topbar .sync-text { white-space: nowrap; }
+.topbar .top-logout { display: none; }
+[tabindex="-1"]:focus { outline: none; }
+.content { width: 100%; max-width: 1240px; padding-block: 28px 64px; padding-left: max(32px, env(safe-area-inset-left, 0px)); padding-right: max(32px, env(safe-area-inset-right, 0px)); display: grid; gap: 24px; align-content: start; }
+.page-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; }
+.page-head > div:first-child { display: grid; gap: 6px; min-width: 0; }
+.page-head h1 { font-family: var(--f-display); font-size: 30px; font-weight: 600; letter-spacing: -0.015em; line-height: 1.15; }
+.page-head .sub { color: var(--fg-2); max-width: 64ch; }
+.page-head .acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.bottomnav { display: none; }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 20px; display: grid; gap: 16px; align-content: start; min-width: 0; }
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.card-head h2 { font-size: 16px; font-weight: 600; }
+.card-head .meta { font-size: 13px; color: var(--muted); }
+.link-btn { background: none; border: 0; color: var(--accent); font-weight: 600; font-size: 14px; cursor: pointer; padding: 4px 0; display: inline-flex; gap: 6px; align-items: center; text-decoration: none; }
+.link-btn:hover { text-decoration: underline; }
+.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 20px; }
+.s4 { grid-column: span 4; } .s5 { grid-column: span 5; } .s6 { grid-column: span 6; } .s7 { grid-column: span 7; } .s8 { grid-column: span 8; } .s12 { grid-column: span 12; }
+
+/* ---------- Início ---------- */
+.hero-num { font-family: var(--f-display); font-weight: 650; font-size: clamp(36px, 4.4vw, 50px); letter-spacing: -0.02em; line-height: 1; }
+.hero-meta { display: flex; flex-wrap: wrap; gap: 6px 16px; color: var(--fg-2); font-size: 14px; }
+.acc-list { display: grid; }
+.acc { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); }
+.acc .mono { width: 36px; height: 36px; }
+.acc-name { font-weight: 600; font-size: 14.5px; }
+.acc-sub { font-size: 13px; color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.acc-val { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+.acc-val small { display: block; font-weight: 400; font-size: 12.5px; color: var(--muted); }
+.mono { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; color: #fff; font-weight: 700; font-size: 14px; font-family: var(--f-display); letter-spacing: .02em; flex: none; }
+.cmp { display: grid; gap: 4px; padding: 14px 0; border-top: 1px solid var(--line); }
+.cmp:first-of-type { border-top: 0; padding-top: 0; }
+.cmp-row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+.cmp-label { font-size: 13px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+.cmp-val { font-family: var(--f-display); font-size: 26px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.cmp-prev { font-size: 13.5px; color: var(--fg-2); }
+.delta { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; }
+.delta.good { color: var(--pos); } .delta.bad { color: var(--warn); }
+.bars { display: grid; gap: 12px; }
+.bar-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; align-items: center; font-size: 14px; }
+.bar-row .bar-name { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.bar-row .bar-val { font-variant-numeric: tabular-nums; font-weight: 600; }
+.bar-track { grid-column: 1 / -1; height: 8px; border-radius: 4px; background: var(--surface-2); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; }
+.dot { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+.mini-tx { display: grid; }
+.mini-tx .tx { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+.mini-tx .tx:first-child { border-top: 0; }
+.tx-desc { font-weight: 500; font-size: 14.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tx-meta { font-size: 13px; color: var(--muted); grid-column: 1; }
+.tx-val { font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; grid-row: 1 / span 2; grid-column: 2; align-self: center; }
+.tx-val.rec { color: var(--pos); }
+.empty { display: grid; justify-items: center; text-align: center; gap: 12px; padding: 40px 16px; }
+.empty .empty-ic { width: 64px; height: 64px; border-radius: 18px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; }
+.empty .empty-ic .ic { width: 30px; height: 30px; }
+.empty h2 { font-family: var(--f-display); font-size: 22px; font-weight: 600; }
+.empty p { color: var(--fg-2); max-width: 46ch; }
+
+/* ---------- Extrato ---------- */
+.filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+.filters .field { min-width: 140px; flex: 1 1 150px; }
+.filters .field.grow { flex: 2 1 220px; }
+.search { position: relative; }
+.search .ic { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+.search .input { padding-left: 38px; }
+.sum-line { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 14px; color: var(--fg-2); }
+.sum-line strong { color: var(--fg); font-variant-numeric: tabular-nums; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tr:last-child td { border-bottom: 0; }
+th.r, td.r { text-align: right; }
+.td-desc strong { font-weight: 500; display: block; }
+.td-desc .m-meta { display: none; font-size: 12.5px; color: var(--muted); }
+.manual-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: var(--fg-2); background: var(--surface-2); border-radius: 6px; padding: 2px 8px; }
+.cat-select { appearance: none; -webkit-appearance: none; border: 1px solid var(--line); background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23677B79' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center; border-radius: 999px; padding: 5px 30px 5px 12px; font-size: 13px; font-weight: 500; cursor: pointer; max-width: 100%; min-height: 32px; }
+.cat-select.unset { border-style: dashed; border-color: var(--warn); color: var(--warn); background-color: var(--warn-bg); font-weight: 600; }
+.cat-cell { display: flex; align-items: center; gap: 8px; }
+.val-rec { color: var(--pos); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.val-des { color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ---------- Conexões ---------- */
+.conn-list { display: grid; gap: 16px; }
+.conn { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 20px; display: grid; gap: 16px; }
+.conn-top { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.conn-top h2 { font-size: 17px; font-weight: 600; }
+.conn-top .pill { margin-left: auto; }
+.conn-meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding: 14px 0; border-block: 1px solid var(--line); }
+.kv { display: grid; gap: 2px; min-width: 0; }
+.kv dt { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+.kv dd { margin: 0; font-size: 14px; }
+.conn-acts { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.conn-acts .note { font-size: 13px; color: var(--muted); }
+
+/* ---------- Fluxo de conexão ---------- */
+.flow { width: 100%; max-width: 920px; display: grid; gap: 24px; }
+.stepper { display: flex; gap: 8px; list-style: none; padding: 0; margin: 0; flex-wrap: wrap; }
+.stepper li { flex: 1 1 160px; display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-radius: var(--r-md); background: var(--surface); border: 1px solid var(--line); font-size: 13.5px; color: var(--muted); }
+.stepper .n { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 13px; background: var(--surface-2); color: var(--fg-2); flex: none; }
+.stepper li[data-s="done"] { color: var(--fg-2); }
+.stepper li[data-s="done"] .n { background: var(--pos-bg); color: var(--pos); }
+.stepper li[data-s="current"] { border-color: var(--accent); color: var(--fg); font-weight: 600; }
+.stepper li[data-s="current"] .n { background: var(--accent); color: var(--accent-fg); }
+.inst-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.inst { display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: var(--r-md); border: 1.5px solid var(--line); background: var(--surface); cursor: pointer; text-align: left; width: 100%; }
+.inst:hover:not([disabled]) { border-color: var(--accent); }
+.inst[aria-checked="true"] { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
+.inst[disabled] { cursor: not-allowed; opacity: .6; }
+.inst div { min-width: 0; display: grid; gap: 2px; }
+.inst strong { font-size: 14.5px; font-weight: 600; }
+.inst div span { font-size: 12.5px; color: var(--muted); }
+.flow-split { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.how { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; counter-reset: how; }
+.how li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; font-size: 14px; color: var(--fg-2); counter-increment: how; }
+.how li::before { content: counter(how); width: 28px; height: 28px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-weight: 700; display: grid; place-items: center; font-size: 13px; }
+.how strong { color: var(--fg); display: block; }
+.flow-foot { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+.result { text-align: center; display: grid; justify-items: center; gap: 14px; padding: 36px 24px; }
+.result-ic { width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; }
+.result-ic .ic { width: 34px; height: 34px; stroke-width: 2.2; }
+.result-ic.ok { background: var(--pos-bg); color: var(--pos); }
+.result-ic.err { background: var(--neg-bg); color: var(--neg); }
+.result-ic.load { background: var(--accent-soft); color: var(--accent); }
+.result-ic.load .spin { width: 34px; height: 34px; border-width: 3px; }
+.result h1 { font-family: var(--f-display); font-size: 28px; font-weight: 600; letter-spacing: -0.01em; }
+.result p { color: var(--fg-2); max-width: 54ch; }
+.result .acts { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 6px; }
+.progress { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 10px; text-align: left; min-width: min(320px, 100%); }
+.progress li { display: flex; gap: 10px; align-items: center; font-size: 14.5px; color: var(--muted); }
+.progress li .st { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--line); flex: none; }
+.progress li[data-s="done"] { color: var(--fg); }
+.progress li[data-s="done"] .st { background: var(--pos); border-color: var(--pos); color: #fff; }
+.progress li[data-s="done"] .st .ic { width: 14px; height: 14px; stroke-width: 3; }
+.progress li[data-s="run"] { color: var(--fg); font-weight: 600; }
+.progress li[data-s="run"] .st { border: 0; color: var(--accent); }
+.found { width: 100%; max-width: 460px; text-align: left; border: 1px solid var(--line); border-radius: var(--r-md); padding: 4px 16px; }
+
+/* Ambiente externo (consentimento) */
+.ext { min-height: 100vh; min-height: 100dvh; background: var(--surface-2); display: flex; flex-direction: column; }
+.ext-note { background: transparent; border-bottom: 1px dashed var(--annot); color: var(--annot); font-family: var(--f-mono); font-size: 12px; text-align: center; padding-block: 8px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.ext-bar { color: #fff; display: flex; align-items: center; gap: 12px; padding-block: 14px; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); }
+.ext-bar .mono { background: rgba(255,255,255,.18); width: 36px; height: 36px; }
+.ext-bar strong { font-size: 17px; font-family: var(--f-display); font-weight: 600; }
+.ext-bar .secure { margin-left: auto; font-size: 13px; opacity: .85; display: flex; gap: 6px; align-items: center; }
+.ext-main { flex: 1; display: grid; place-items: start center; padding-block: 32px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.ext-card { width: 100%; max-width: 580px; background: var(--surface); border-radius: var(--r-lg); border: 1px solid var(--line); box-shadow: var(--shadow); padding: 28px; display: grid; gap: 20px; }
+.ext-card h1 { font-size: 22px; font-weight: 600; line-height: 1.3; }
+.req-app { display: flex; gap: 12px; align-items: center; padding: 12px; background: var(--surface-2); border-radius: var(--r-md); }
+.req-app .logo svg { width: 36px; height: 36px; }
+.req-app div { font-size: 13.5px; color: var(--fg-2); }
+.req-app strong { color: var(--fg); display: block; font-size: 15px; }
+.share-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.share-list li { display: flex; gap: 10px; font-size: 14.5px; }
+.share-list li .ic { color: var(--pos); margin-top: 2px; }
+.share-list li span { color: var(--muted); display: block; font-size: 13px; }
+.terms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.terms .kv { background: var(--surface-2); padding: 10px 12px; border-radius: var(--r-md); }
+
+/* ---------- Gráficos ---------- */
+.chart-wrap { position: relative; }
+.donut-layout { display: grid; grid-template-columns: minmax(0, 240px) minmax(0, 1fr); gap: 28px; align-items: center; }
+.donut svg { width: 100%; height: auto; display: block; }
+.donut path { cursor: pointer; transition: opacity .15s; }
+.donut.has-hover path:not(.on) { opacity: .35; }
+.legend-table td, .legend-table th { padding: 8px 10px; }
+.legend-table tr[data-i] { cursor: pointer; }
+.legend-table tr.on td { background: var(--surface-2); }
+.legend-key { display: flex; gap: 8px; align-items: center; }
+.line-legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13.5px; color: var(--fg-2); }
+.line-legend span { display: inline-flex; gap: 8px; align-items: center; }
+.line-legend i { width: 16px; height: 3px; border-radius: 2px; display: inline-block; }
+.line-chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+.tip { position: absolute; pointer-events: none; background: var(--fg); color: var(--bg); border-radius: 8px; padding: 8px 10px; font-size: 12.5px; line-height: 1.45; box-shadow: var(--shadow); white-space: nowrap; transform: translate(-50%, calc(-100% - 10px)); z-index: 3; }
+.tip strong { display: block; font-size: 13px; }
+.tip i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 6px; }
+.footnote { font-size: 12.5px; color: var(--muted); }
+
+/* ---------- Relatórios ---------- */
+.report-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) auto; gap: 12px; align-items: end; }
+.kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.kpi { background: var(--surface-2); border-radius: var(--r-md); padding: 14px 16px; display: grid; gap: 2px; }
+.kpi span { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+.kpi strong { font-family: var(--f-display); font-size: 24px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.report-doc { border: 1px solid var(--line); border-radius: var(--r-md); padding: 20px; display: grid; gap: 16px; }
+.report-doc header { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: baseline; }
+.report-doc header h3 { font-size: 16px; }
+
+/* ---------- Administração ---------- */
+.mono-cell { font-family: var(--f-mono); font-size: 13px; white-space: nowrap; }
+.act-code { font-family: var(--f-mono); font-size: 12.5px; background: var(--surface-2); padding: 2px 8px; border-radius: 6px; }
+.svc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.svc { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 16px 18px; display: grid; gap: 10px; align-content: start; }
+.svc.down { border-color: var(--neg); box-shadow: inset 4px 0 0 var(--neg); }
+.svc-top { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+.svc-top h3 { font-size: 15px; font-weight: 600; display: flex; gap: 8px; align-items: center; }
+.svc p { font-size: 13.5px; color: var(--fg-2); }
+.svc .when { font-size: 12.5px; color: var(--muted); font-family: var(--f-mono); }
+.summary-strip { display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: center; }
+.summary-strip .big { font-family: var(--f-display); font-size: 28px; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* ---------- Modal, toast, painel do protótipo ---------- */
+.modal-root { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: 16px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); background: var(--overlay); }
+.modal { width: 100%; max-width: 520px; max-height: calc(100% - 32px); overflow: auto; background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--shadow); padding: 24px; display: grid; gap: 18px; }
+.modal-head { display: flex; gap: 12px; align-items: flex-start; justify-content: space-between; }
+.modal-head h2 { font-family: var(--f-display); font-size: 22px; font-weight: 600; }
+.modal-x { border: 0; background: transparent; width: 36px; height: 36px; border-radius: 8px; cursor: pointer; color: var(--muted); display: grid; place-items: center; flex: none; }
+.modal-x:hover { background: var(--surface-2); color: var(--fg); }
+.modal-acts { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+.modal form { display: grid; gap: 16px; }
+.form-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.money { position: relative; }
+.money span { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-weight: 600; font-size: 14px; }
+.money .input { padding-left: 40px; font-variant-numeric: tabular-nums; }
+.toasts { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 60; display: grid; gap: 8px; width: min(480px, calc(100% - 32px)); pointer-events: none; }
+.toast { pointer-events: auto; display: flex; gap: 10px; align-items: flex-start; background: var(--fg); color: var(--bg); padding: 12px 14px; border-radius: var(--r-md); box-shadow: var(--shadow); font-size: 14px; animation: tin .2s ease-out; }
+.toast .ic { margin-top: 2px; }
+.toast.ok .ic { color: var(--pos-bg); }
+.toast.err .ic { color: var(--neg-bg); }
+.toast.warn .ic { color: var(--warn-bg); }
+@keyframes tin { from { transform: translateY(8px); opacity: 0; } }
+.fab { position: fixed; z-index: 30; right: calc(20px + env(safe-area-inset-right, 0px)); bottom: calc(20px + env(safe-area-inset-bottom, 0px)); display: inline-flex; align-items: center; gap: 8px; border: 1px dashed var(--annot); background: var(--surface); color: var(--annot); font-family: var(--f-mono); font-size: 12.5px; padding: 10px 14px; border-radius: 999px; box-shadow: var(--shadow); cursor: pointer; }
+.fab:hover { background: var(--surface-2); }
+.drawer { position: fixed; z-index: 50; top: 0; right: 0; bottom: 0; width: min(400px, 100%); background: var(--surface); border-left: 1px dashed var(--annot); box-shadow: var(--shadow); overflow-y: auto; padding-block: calc(20px + env(safe-area-inset-top, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)); padding-left: 20px; padding-right: max(20px, env(safe-area-inset-right, 0px)); display: grid; gap: 20px; align-content: start; }
+.drawer-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.drawer-head h2 { font-family: var(--f-mono); font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--annot); font-weight: 500; }
+.drawer section { display: grid; gap: 8px; }
+.drawer h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+.drawer .group { font-size: 13px; font-weight: 600; color: var(--fg-2); margin-top: 6px; }
+.map-link { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 2px 10px; padding: 8px 10px; border-radius: 8px; text-decoration: none; color: var(--fg); font-size: 14px; border: 0; background: none; text-align: left; cursor: pointer; width: 100%; }
+.map-link:hover { background: var(--surface-2); }
+.map-link[aria-current="page"] { background: var(--accent-soft); }
+.map-link .tid { font-family: var(--f-mono); font-size: 12px; color: var(--annot); grid-row: 1 / span 2; padding-top: 2px; }
+.map-link .rq { font-family: var(--f-mono); font-size: 11.5px; color: var(--muted); }
+.toggle { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 14px; padding: 6px 0; }
+.toggle small { display: block; color: var(--muted); font-size: 12.5px; }
+.switch { position: relative; width: 42px; height: 24px; flex: none; }
+.switch input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.switch span { position: absolute; inset: 0; border-radius: 999px; background: var(--line); transition: background .15s; pointer-events: none; }
+.switch span::after { content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: transform .15s; box-shadow: 0 1px 2px rgba(0,0,0,.2); }
+.switch input:checked + span { background: var(--accent); }
+.switch input:checked + span::after { transform: translateX(18px); }
+.switch input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+.cred { font-family: var(--f-mono); font-size: 12.5px; background: var(--surface-2); border-radius: 8px; padding: 8px 10px; color: var(--fg-2); line-height: 1.6; }
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 1080px) {
+  .s4, .s5, .s6, .s7, .s8 { grid-column: span 12; }
+  .flow-split { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 900px) {
+  .auth { grid-template-columns: minmax(0, 1fr); }
+  .auth-brand { padding-block: 24px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); gap: 16px; }
+  .auth-brand .merge, .auth-brand p, .auth-foot { display: none; }
+  .auth-brand h2 { font-size: 24px; max-width: none; }
+  .auth-main { place-items: start center; padding-block: 28px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .shell { grid-template-columns: minmax(0, 1fr); background: var(--bg); }
+  .sidebar { display: none; }
+  .topbar { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .topbar .logo { display: inline-flex; }
+  .topbar .logo span { font-size: 18px; }
+  .topbar .logo svg { width: 28px; height: 28px; }
+  .topbar .crumb, .topbar .sync-text { display: none; }
+  .topbar .top-logout { display: inline-flex; }
+  .content { padding-block: 20px calc(96px + env(safe-area-inset-bottom, 0px)); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); gap: 18px; }
+  .page-head h1 { font-size: 25px; }
+  .bottomnav { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--surface); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom, 0px); padding-left: max(8px, env(safe-area-inset-left, 0px)); padding-right: max(8px, env(safe-area-inset-right, 0px)); }
+  .bottomnav a { display: grid; justify-items: center; gap: 2px; padding: 8px 2px 10px; font-size: 11px; font-weight: 500; color: var(--muted); text-decoration: none; text-align: center; }
+  .bottomnav a .ic { width: 22px; height: 22px; }
+  .bottomnav a[aria-current="page"] { color: var(--accent); font-weight: 600; }
+  .fab { bottom: calc(80px + env(safe-area-inset-bottom, 0px)); padding: 9px 12px; }
+  .fab .fab-txt { display: none; }
+  .toasts { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+  .conn-meta { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+}
+@media (max-width: 720px) {
+  .tx-table thead { display: none; }
+  .tx-table tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .tx-table tr:last-child { border-bottom: 0; }
+  .tx-table td { padding: 0; border: 0; }
+  .tx-table .td-data, .tx-table .td-conta { display: none; }
+  .tx-table .td-desc { grid-column: 1; grid-row: 1; min-width: 0; }
+  .tx-table .td-desc .m-meta { display: block; }
+  .tx-table .td-valor { grid-column: 2; grid-row: 1; }
+  .tx-table .td-cat { grid-column: 1 / -1; grid-row: 2; }
+  .donut-layout { grid-template-columns: minmax(0, 1fr); }
+  .donut { max-width: 240px; justify-self: center; width: 100%; }
+  .report-form, .kpis, .form-2, .terms { grid-template-columns: minmax(0, 1fr); }
+  .card { padding: 16px; }
+  .ext-card { padding: 20px; }
+  .modal { padding: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+<body>
+
+
+<div id="app"></div>
+<div id="modal-root"></div>
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+<button class="fab" id="fab" type="button" data-action="drawer-open" aria-haspopup="dialog" aria-controls="drawer"></button>
+<aside class="drawer" id="drawer" hidden aria-label="Painel do protótipo"></aside>
+
+<script>
+(function () {
+"use strict";
+
+/* ======================= Dados de exemplo ======================= */
+var NOW = new Date();
+var INST = [
+  { codigo: "AUR", nome: "Banco Aurora", cor: "#B4410E", tipo: "Banco múltiplo" },
+  { codigo: "IPE", nome: "Ipê Digital", cor: "#8A6200", tipo: "Banco digital" },
+  { codigo: "CER", nome: "Cooperativa Cerrado", cor: "#3F6212", tipo: "Cooperativa de crédito" },
+  { codigo: "HOR", nome: "Banco Horizonte", cor: "#1D4ED8", tipo: "Banco múltiplo" },
+  { codigo: "VER", nome: "Vértice Investimentos", cor: "#6D28D9", tipo: "Corretora" },
+  { codigo: "LIT", nome: "Banco Litoral", cor: "#0E7490", tipo: "Banco digital" },
+  { codigo: "PLA", nome: "Banco Planalto", cor: "#9F1239", tipo: "Banco múltiplo" },
+  { codigo: "SER", nome: "Serra Pagamentos", cor: "#475569", tipo: "Instituição de pagamento" }
+];
+var CATS = [
+  { id: "moradia", nome: "Moradia", tipo: "despesa", c: "--c1" },
+  { id: "alimentacao", nome: "Alimentação", tipo: "despesa", c: "--c2" },
+  { id: "transporte", nome: "Transporte", tipo: "despesa", c: "--c3" },
+  { id: "saude", nome: "Saúde", tipo: "despesa", c: "--c4" },
+  { id: "lazer", nome: "Lazer", tipo: "despesa", c: "--c5" },
+  { id: "educacao", nome: "Educação", tipo: "despesa", c: "--c6" },
+  { id: "compras", nome: "Compras", tipo: "despesa", c: "--c7" },
+  { id: "outros", nome: "Outros", tipo: "ambos", c: "--c8" },
+  { id: "salario", nome: "Salário", tipo: "receita", c: "--pos" },
+  { id: "investimentos", nome: "Investimentos", tipo: "receita", c: "--pos" }
+];
+var HIST = [
+  { m: "Mai", r: 5236.00, d: 3480.40 },
+  { m: "Jun", r: 5810.00, d: 3922.15 },
+  { m: "Jul", r: 5236.00, d: 3105.70 },
+  { m: "Ago", r: 5236.00, d: 3610.25 }
+];
+var SERVICOS = [
+  { nome: "Interface Web", desc: "Telas do usuário final e do administrador" },
+  { nome: "Autenticação", desc: "Cadastro e login" },
+  { nome: "Conexões", desc: "Conectar, listar, atualizar e desconectar instituições" },
+  { nome: "Integração Open Finance", desc: "Comunicação com as APIs das instituições, isolando falhas" },
+  { nome: "Finanças", desc: "Saldo, extrato, lançamentos, categorias, dashboard, gráficos e relatórios" },
+  { nome: "Administração", desc: "Logs de auditoria e status dos serviços" },
+  { nome: "Banco de Dados", desc: "Persistência com dados sensíveis criptografados" }
+];
+
+function minutesAgo(m) { return new Date(NOW.getTime() - m * 60000); }
+function monthsAhead(n) { var d = new Date(NOW); d.setMonth(d.getMonth() + n); return d; }
+
+function seedDemo() {
+  var t = function (id, data, descricao, valor, tipo, cat, conta) { return { id: id, data: data, descricao: descricao, valor: valor, tipo: tipo, cat: cat, conta: conta }; };
+  return {
+    conexoes: [
+      { id: "c1", inst: "AUR", status: "ativa", dataExpiracao: new Date("2027-03-14T12:00:00"), ultimaAtualizacao: minutesAgo(8) },
+      { id: "c2", inst: "IPE", status: "ativa", dataExpiracao: new Date("2027-07-02T12:00:00"), ultimaAtualizacao: minutesAgo(8) },
+      { id: "c3", inst: "CER", status: "expirada", dataExpiracao: new Date("2026-10-12T12:00:00"), ultimaAtualizacao: new Date("2026-10-12T09:15:00") }
+    ],
+    contas: [
+      { id: "k1", conexao: "c1", tipo: "Conta corrente", numero: "4821", saldo: 3284.50 },
+      { id: "k2", conexao: "c1", tipo: "Cartão de crédito", numero: "7710", saldo: -1142.30 },
+      { id: "k3", conexao: "c2", tipo: "Conta corrente", numero: "0937", saldo: 1905.12 },
+      { id: "k4", conexao: "c2", tipo: "Poupança", numero: "0937-5", saldo: 6420.00 },
+      { id: "k5", conexao: "c3", tipo: "Conta corrente", numero: "5512", saldo: 812.40 }
+    ],
+    transacoes: [
+      t("o1", "2026-10-20", "Padaria Pão de Queijo", 18.90, "despesa", "alimentacao", "k3"),
+      t("o2", "2026-10-19", "Posto Cerrado - combustível", 210.00, "despesa", "transporte", "k2"),
+      t("o3", "2026-10-18", "Cinema", 64.00, "despesa", "lazer", "k2"),
+      t("o4", "2026-10-18", "Feira de domingo (dinheiro)", 85.00, "despesa", "alimentacao", null),
+      t("o5", "2026-10-17", "Farmácia Vida", 47.35, "despesa", "saude", "k3"),
+      t("o6", "2026-10-16", "Pix recebido - trabalho freelance", 650.00, "receita", null, "k3"),
+      t("o7", "2026-10-15", "Supermercado Bom Preço", 412.80, "despesa", "alimentacao", "k1"),
+      t("o8", "2026-10-14", "Aplicativo de transporte", 32.50, "despesa", "transporte", "k2"),
+      t("o9", "2026-10-13", "Livraria Universitária", 89.90, "despesa", "educacao", "k2"),
+      t("o10", "2026-10-12", "Restaurante Sabor Goiano", 56.00, "despesa", "alimentacao", "k5"),
+      t("o11", "2026-10-10", "Conta de energia", 186.42, "despesa", "moradia", "k1"),
+      t("o12", "2026-10-10", "Internet residencial", 99.90, "despesa", "moradia", "k1"),
+      t("o13", "2026-10-08", "Loja de roupas", 159.90, "despesa", "compras", "k2"),
+      t("o14", "2026-10-07", "Pix enviado - M. Oliveira", 120.00, "despesa", null, "k3"),
+      t("o15", "2026-10-05", "Aluguel", 1450.00, "despesa", "moradia", "k1"),
+      t("o16", "2026-10-05", "Salário", 5200.00, "receita", "salario", "k1"),
+      t("o17", "2026-10-03", "Academia", 99.00, "despesa", "saude", "k3"),
+      t("o18", "2026-10-02", "Rendimento da poupança", 38.52, "receita", "investimentos", "k4"),
+      t("o19", "2026-10-01", "Assinatura de streaming", 39.90, "despesa", "lazer", "k2"),
+      t("s1", "2026-09-29", "Presente de aniversário", 210.00, "despesa", "compras", "k2"),
+      t("s2", "2026-09-26", "Show no centro cultural", 180.00, "despesa", "lazer", "k2"),
+      t("s3", "2026-09-24", "Supermercado Bom Preço", 268.15, "despesa", "alimentacao", "k1"),
+      t("s4", "2026-09-21", "Curso online de inglês", 149.00, "despesa", "educacao", "k2"),
+      t("s5", "2026-09-19", "Restaurante Sabor Goiano", 142.00, "despesa", "alimentacao", "k5"),
+      t("s6", "2026-09-17", "Posto Cerrado - combustível", 230.00, "despesa", "transporte", "k2"),
+      t("s7", "2026-09-15", "Farmácia Vida", 63.20, "despesa", "saude", "k3"),
+      t("s8", "2026-09-12", "Aplicativo de transporte", 58.70, "despesa", "transporte", "k2"),
+      t("s9", "2026-09-10", "Supermercado Bom Preço", 389.40, "despesa", "alimentacao", "k1"),
+      t("s10", "2026-09-10", "Conta de energia", 201.77, "despesa", "moradia", "k1"),
+      t("s11", "2026-09-10", "Internet residencial", 99.90, "despesa", "moradia", "k1"),
+      t("s12", "2026-09-05", "Aluguel", 1450.00, "despesa", "moradia", "k1"),
+      t("s13", "2026-09-05", "Salário", 5200.00, "receita", "salario", "k1"),
+      t("s14", "2026-09-03", "Academia", 99.00, "despesa", "saude", "k3"),
+      t("s15", "2026-09-02", "Rendimento da poupança", 36.10, "receita", "investimentos", "k4"),
+      t("s16", "2026-09-01", "Assinatura de streaming", 39.90, "despesa", "lazer", "k2")
+    ]
+  };
+}
+function seedLogs() {
+  var l = function (d, u, a, s) { return { dataHora: new Date(d), usuario: u, acao: a, sucesso: s }; };
+  return [
+    l("2026-10-20T09:58:12", "ana.souza@email.com", "LOGIN", true),
+    l("2026-10-20T09:57:40", "ana.souza@email.com", "LOGIN", false),
+    l("2026-10-19T21:14:03", "marina.r@email.com", "CONEXAO", true),
+    l("2026-10-19T21:12:47", "marina.r@email.com", "CONEXAO", false),
+    l("2026-10-19T21:10:02", "marina.r@email.com", "LOGIN", true),
+    l("2026-10-18T16:45:30", "joao.p@email.com", "DESCONEXAO", true),
+    l("2026-10-18T16:40:11", "joao.p@email.com", "LOGIN", true),
+    l("2026-10-17T08:05:55", "ana.souza@email.com", "LOGIN", true),
+    l("2026-10-16T19:22:51", "rafael.c@email.com", "LOGIN", false),
+    l("2026-10-16T19:22:18", "rafael.c@email.com", "LOGIN", false),
+    l("2026-10-15T12:30:09", "ana.souza@email.com", "CONEXAO", true),
+    l("2026-10-15T12:28:44", "ana.souza@email.com", "LOGIN", true),
+    l("2026-10-14T07:51:20", "joao.p@email.com", "CONEXAO", true),
+    l("2026-10-13T18:03:37", "marina.r@email.com", "DESCONEXAO", true)
+  ];
+}
+
+/* ======================= Estado ======================= */
+var state;
+function resetState() {
+  state = {
+    session: null,
+    users: [
+      { nome: "Ana Souza", email: "ana.souza@email.com", senha: "unibank123", role: "user" },
+      { nome: "Carlos Lima", email: "admin@unibank.com.br", senha: "admin123", role: "admin" }
+    ],
+    store: { "ana.souza@email.com": seedDemo() },
+    logs: seedLogs(),
+    scen: { instFail: false, svcDown: false, showReq: true },
+    connect: { inst: null, renew: null },
+    lastConnect: null,
+    failedConn: null,
+    discId: null,
+    flash: null,
+    loginPrefill: "",
+    filters: { periodo: "2026-10", conta: "todas", tipo: "todos", q: "" },
+    chartPeriodo: "2026-10",
+    report: { inicio: "2026-10-01", fim: "2026-10-20", gerado: true },
+    svcCheck: new Date(),
+    seq: 100
+  };
+}
+resetState();
+
+function data() { return state.session ? state.store[state.session.email] : null; }
+function instBy(code) { for (var i = 0; i < INST.length; i++) if (INST[i].codigo === code) return INST[i]; return null; }
+function catBy(id) { for (var i = 0; i < CATS.length; i++) if (CATS[i].id === id) return CATS[i]; return null; }
+function conexaoBy(id) { var d = data(); return d ? d.conexoes.filter(function (c) { return c.id === id; })[0] : null; }
+function contaBy(id) { var d = data(); return d ? d.contas.filter(function (c) { return c.id === id; })[0] : null; }
+function contasDe(cid) { return data().contas.filter(function (k) { return k.conexao === cid; }); }
+function instDaConta(k) { var c = conexaoBy(k.conexao); return c ? instBy(c.inst) : null; }
+function log(acao, sucesso, usuario) {
+  state.logs.unshift({ dataHora: new Date(), usuario: usuario || (state.session ? state.session.email : "desconhecido"), acao: acao, sucesso: sucesso });
+}
+
+/* ======================= Utilidades ======================= */
+var BRL = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+function money(v) { return BRL.format(v); }
+function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+function pad(n) { return (n < 10 ? "0" : "") + n; }
+function dISO(iso) { var p = iso.split("-"); return p[2] + "/" + p[1] + "/" + p[0]; }
+function dShort(iso) { var p = iso.split("-"); return p[2] + "/" + p[1]; }
+function dDate(d) { return pad(d.getDate()) + "/" + pad(d.getMonth() + 1) + "/" + d.getFullYear(); }
+function dTime(d) { return pad(d.getHours()) + ":" + pad(d.getMinutes()); }
+function dFull(d) { return dDate(d) + " " + dTime(d) + ":" + pad(d.getSeconds()); }
+function sameDay(a, b) { return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate(); }
+function quando(d) { return sameDay(d, new Date()) ? "hoje às " + dTime(d) : "em " + dDate(d) + " às " + dTime(d); }
+var MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+function mesNome(ym) { var p = ym.split("-"); return MESES[parseInt(p[1], 10) - 1] + " de " + p[0]; }
+function initials(n) { return n.split(" ").filter(Boolean).slice(0, 2).map(function (w) { return w[0]; }).join("").toUpperCase(); }
+function mono(inst, extra) { return '<span class="mono ' + (extra || "") + '" style="background:' + inst.cor + '" aria-hidden="true">' + esc(inst.codigo.slice(0, 2)) + "</span>"; }
+function pct(a, b) { return b ? Math.round((a - b) / b * 100) : 0; }
+
+var IC = {
+  home: '<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
+  list: '<path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>',
+  pie: '<path d="M21 12A9 9 0 1 1 12 3v9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/>',
+  file: '<path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
+  link: '<path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"/><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/>',
+  unlink: '<path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"/><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/><path d="M3 3l18 18"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  refresh: '<path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20v-4h-4"/>',
+  logout: '<path d="M15 4h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4"/><path d="M10 17l5-5-5-5M15 12H3"/>',
+  shield: '<path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+  server: '<path d="M4 4h16v6H4zM4 14h16v6H4z"/><path d="M8 7h.01M8 17h.01"/>',
+  lock: '<path d="M6 11h12v9H6z"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+  check: '<path d="M5 12.5 10 17l9-10"/>',
+  x: '<path d="M6 6l12 12M18 6 6 18"/>',
+  alert: '<path d="M12 4 2.5 20h19z"/><path d="M12 10v4M12 17h.01"/>',
+  info: '<path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"/><path d="M12 11v5M12 8h.01"/>',
+  search: '<path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/><path d="M20 20l-4-4"/>',
+  eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><path d="M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>',
+  eyeoff: '<path d="M3 3l18 18"/><path d="M10.6 5.1A10.8 10.8 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4.2M6.6 6.6A17 17 0 0 0 2 12s3.5 7 10 7a10 10 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2"/>',
+  chev: '<path d="M9 6l6 6-6 6"/>',
+  back: '<path d="M19 12H5M11 6l-6 6 6 6"/>',
+  up: '<path d="M12 19V5M6 11l6-6 6 6"/>',
+  down: '<path d="M12 5v14M6 13l6 6 6-6"/>',
+  map: '<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
+  bank: '<path d="M3 9 12 4l9 5"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/>',
+  download: '<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',
+  clock: '<path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z"/><path d="M12 7v5l3 2"/>',
+  wallet: '<path d="M4 7h15a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M4 7V6a2 2 0 0 1 2-2h11v3M16 13.5h.01"/>'
+};
+function ic(name, cls) { return '<svg class="ic ' + (cls || "") + '" viewBox="0 0 24 24" aria-hidden="true">' + (IC[name] || "") + "</svg>"; }
+var LOGO_SVG = '<svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#F2B705"/><path d="M10 9v8.2a6 6 0 0 0 12 0V9" fill="none" stroke="#0B3F44" stroke-width="3.4" stroke-linecap="round"/></svg>';
+function logo() { return '<span class="logo">' + LOGO_SVG + "<span>UniBank</span></span>"; }
+
+/* ======================= Telas (registro) ======================= */
+var SCREENS = {
+  login:          { id: "T01", nome: "Login", req: ["RF01"], layout: "auth" },
+  cadastro:       { id: "T02", nome: "Cadastro", req: ["RF01"], layout: "auth" },
+  inicio:         { id: "T03", nome: "Início (dashboard)", req: ["RF03", "RF07"], role: "user", nav: "inicio", title: "Início" },
+  extrato:        { id: "T04", nome: "Extrato", req: ["RF04", "RF06"], role: "user", nav: "extrato", title: "Extrato" },
+  lancamento:     { id: "T05", nome: "Novo lançamento manual", req: ["RF05"], role: "user", nav: "extrato", title: "Extrato" },
+  graficos:       { id: "T06", nome: "Gráficos", req: ["RF09"], role: "user", nav: "graficos", title: "Gráficos" },
+  relatorios:     { id: "T07", nome: "Relatórios", req: ["RF08"], role: "user", nav: "relatorios", title: "Relatórios" },
+  conexoes:       { id: "T08", nome: "Minhas conexões", req: ["RF10", "RF11"], role: "user", nav: "conexoes", title: "Minhas conexões" },
+  desconectar:    { id: "T09", nome: "Desconectar instituição", req: ["RF12"], role: "user", nav: "conexoes", title: "Minhas conexões" },
+  conectar:       { id: "T10", nome: "Escolher instituição", req: ["RF02"], seq: "msg. 1", role: "user", nav: "conexoes", title: "Conectar conta" },
+  consentimento:  { id: "T11", nome: "Consentimento na instituição", req: ["RF02"], seq: "msgs. 4–5", role: "user", layout: "ext" },
+  conectando:     { id: "T12", nome: "Conectando", req: ["RF02"], seq: "msgs. 6–13", role: "user", nav: "conexoes", title: "Conectar conta" },
+  conectada:      { id: "T13", nome: "Conta conectada", req: ["RF02"], seq: "msgs. 14–15", role: "user", nav: "conexoes", title: "Conectar conta" },
+  "falha-conexao":{ id: "T14", nome: "Falha na conexão", req: ["RF02"], seq: "msgs. 16–19", role: "user", nav: "conexoes", title: "Conectar conta" },
+  logs:           { id: "T15", nome: "Logs de auditoria", req: ["RF13"], role: "admin", nav: "logs", title: "Logs de auditoria" },
+  servicos:       { id: "T16", nome: "Status dos serviços", req: ["RF14"], role: "admin", nav: "servicos", title: "Status dos serviços" }
+};
+var MAP_GROUPS = [
+  { nome: "Acesso", itens: ["login", "cadastro"] },
+  { nome: "Usuário final", itens: ["inicio", "extrato", "lancamento", "graficos", "relatorios", "conexoes", "desconectar"] },
+  { nome: "Fluxo principal: conectar conta (diagrama de sequência)", itens: ["conectar", "consentimento", "conectando", "conectada", "falha-conexao"] },
+  { nome: "Administrador", itens: ["logs", "servicos"] }
+];
+var NAV = {
+  user: [
+    { t: "inicio", label: "Início", ic: "home" },
+    { t: "extrato", label: "Extrato", ic: "list" },
+    { t: "graficos", label: "Gráficos", ic: "pie" },
+    { t: "relatorios", label: "Relatórios", ic: "file" },
+    { t: "conexoes", label: "Conexões", full: "Minhas conexões", ic: "link" }
+  ],
+  admin: [
+    { t: "logs", label: "Logs", full: "Logs de auditoria", ic: "shield" },
+    { t: "servicos", label: "Serviços", full: "Status dos serviços", ic: "server" }
+  ]
+};
+function annot(token) {
+  var s = SCREENS[token];
+  return '<span class="annot" title="Identificação da tela e requisitos atendidos">' + s.id + " · " + s.req.join(", ") + (s.seq ? " · seq. " + s.seq : "") + "</span>";
+}
+
+/* ======================= Navegação ======================= */
+var current = null;
+function token() { var h = (location.hash || "").replace(/^#/, ""); return SCREENS[h] ? h : null; }
+function go(t) {
+  if (location.hash.replace(/^#/, "") === t) { render(true); }
+  else { location.hash = t; }
+}
+window.addEventListener("hashchange", function () { render(true); });
+
+function loginAs(role, silent) {
+  var u = state.users.filter(function (x) { return x.role === role; })[0];
+  state.session = { nome: u.nome, email: u.email, role: u.role };
+  if (!state.store[u.email] && role === "user") state.store[u.email] = { conexoes: [], contas: [], transacoes: [] };
+  if (!silent) log("LOGIN", true, u.email);
+}
+
+function render(nav) {
+  var t = token() || (state.session ? (state.session.role === "admin" ? "logs" : "inicio") : "login");
+  var s = SCREENS[t];
+  if (s.role) {
+    if (!state.session || state.session.role !== s.role) {
+      loginAs(s.role, false);
+      toast(s.role === "admin" ? "Sessão de demonstração iniciada como administrador." : "Sessão de demonstração iniciada como Ana Souza.", "info");
+    }
+  }
+  current = t;
+  closeModal(true);
+  var html;
+  if (s.layout === "auth") html = SCR[t]();
+  else if (s.layout === "ext") html = SCR[t]();
+  else html = shell(t, SCR[t]());
+  var app = document.getElementById("app");
+  app.innerHTML = html;
+  document.documentElement.classList.toggle("hide-annot", !state.scen.showReq);
+  if (AFTER[t]) AFTER[t]();
+  renderDrawer();
+  if (nav) {
+    window.scrollTo(0, 0);
+    var h1 = app.querySelector("h1");
+    if (h1 && !document.querySelector(".modal")) { h1.setAttribute("tabindex", "-1"); h1.focus({ preventScroll: true }); }
+  }
+}
+
+/* ======================= Layouts ======================= */
+function shell(t, inner) {
+  var s = SCREENS[t], role = state.session.role, items = NAV[role];
+  var nav = items.map(function (n) {
+    return '<a href="#' + n.t + '"' + (s.nav === n.t ? ' aria-current="page"' : "") + ">" + ic(n.ic) + "<span>" + esc(n.full || n.label) + "</span></a>";
+  }).join("");
+  var bnav = items.map(function (n) {
+    return '<a href="#' + n.t + '"' + (s.nav === n.t ? ' aria-current="page"' : "") + ">" + ic(n.ic) + "<span>" + esc(n.label) + "</span></a>";
+  }).join("");
+  var d = data();
+  var sync = "";
+  if (role === "user" && d && d.conexoes.length) {
+    var last = d.conexoes.filter(function (c) { return c.status === "ativa"; }).map(function (c) { return c.ultimaAtualizacao; }).sort(function (a, b) { return b - a; })[0];
+    sync = '<span class="sync-text">' + (last ? "Dados atualizados " + quando(last) : "") + '</span><button class="btn btn-secondary btn-sm" type="button" data-action="refresh-all">' + ic("refresh") + "<span>Atualizar dados</span></button>";
+  }
+  return '<div class="shell">' +
+    '<aside class="sidebar" aria-label="Menu principal">' + logo() +
+      '<nav class="nav" aria-label="Seções"><div class="nav-label">' + (role === "admin" ? "Administração" : "Minhas finanças") + "</div>" + nav + "</nav>" +
+      '<div class="side-foot"><div class="who"><span class="avatar" aria-hidden="true">' + initials(state.session.nome) + "</span><div><strong>" + esc(state.session.nome) + "</strong><span>" + esc(state.session.email) + "</span></div></div>" +
+      '<button class="btn btn-ghost btn-sm" type="button" data-action="logout">' + ic("logout") + "<span>Sair</span></button></div>" +
+    "</aside>" +
+    '<div class="main">' +
+      '<header class="topbar">' + logo() + '<div class="crumb">' + (role === "admin" ? "Administração" : "UniBank") + ic("chev") + "<strong>" + esc(s.title) + "</strong></div>" +
+        '<div class="sync">' + sync + '<button class="btn btn-ghost btn-sm top-logout" type="button" data-action="logout" aria-label="Sair">' + ic("logout") + "</button></div>" +
+      "</header>" +
+      '<main class="content" id="main">' + inner + "</main>" +
+    "</div>" +
+    '<nav class="bottomnav" aria-label="Seções">' + bnav + "</nav>" +
+  "</div>";
+}
+
+function pageHead(t, title, sub, acts, eyebrow) {
+  return '<div class="page-head"><div><div class="eyebrow">' + (eyebrow ? "<span>" + eyebrow + "</span>" : "") + annot(t) + "</div><h1>" + title + "</h1>" + (sub ? '<p class="sub">' + sub + "</p>" : "") + "</div>" + (acts ? '<div class="acts">' + acts + "</div>" : "") + "</div>";
+}
+function flashHtml() {
+  if (!state.flash) return "";
+  var f = state.flash; state.flash = null;
+  var map = { ok: ["banner-ok", "check"], err: ["banner-err", "alert"], warn: ["banner-warn", "alert"], info: ["banner-info", "info"] };
+  var m = map[f.type] || map.info;
+  return '<div class="banner ' + m[0] + '" role="status">' + ic(m[1]) + "<div>" + (f.title ? "<strong>" + esc(f.title) + "</strong>" : "") + esc(f.msg) + "</div></div>";
+}
+
+function authLayout(t, form) {
+  return '<div class="auth">' +
+    '<section class="auth-brand" aria-label="Sobre o UniBank">' + logo() +
+      "<div><h2>Suas contas de vários bancos, <em>num só lugar.</em></h2><p>Conecte suas instituições pelo Open Finance e acompanhe saldo, gastos e relatórios em um único painel.</p></div>" +
+      '<div class="merge" aria-hidden="true"><div class="merge-src">' +
+        "<div>" + mono(instBy("AUR")) + "<span><b>Banco Aurora</b><small>R$ 3.284,50</small></span></div>" +
+        "<div>" + mono(instBy("IPE")) + "<span><b>Ipê Digital</b><small>R$ 8.325,12</small></span></div>" +
+        "<div>" + mono(instBy("CER")) + "<span><b>Coop. Cerrado</b><small>R$ 812,40</small></span></div>" +
+      '</div><svg class="lines" viewBox="0 0 44 150" fill="none" stroke="#9DBDB9" stroke-width="1.5"><path d="M0 25 C 22 25, 22 75, 44 75"/><path d="M0 75 H 44"/><path d="M0 125 C 22 125, 22 75, 44 75"/></svg>' +
+      '<div class="merge-dst"><small>Saldo em contas</small><strong>R$ 12.422,02</strong><span>3 instituições · 4 contas</span></div></div>' +
+      '<div class="auth-foot"><span>Compartilhamento autorizado por você, via Open Finance Brasil</span><span>Protótipo acadêmico · Grupo 7, Ponto e Vírgula</span></div>' +
+    "</section>" +
+    '<main class="auth-main"><div class="auth-card">' + form + "</div></main>" +
+  "</div>";
+}
+
+/* ======================= Renderizadores ======================= */
+var SCR = {};
+var AFTER = {};
+
+SCR.login = function () {
+  return authLayout("login",
+    "<div><div class=\"eyebrow\">" + annot("login") + "</div><h1 style=\"margin-top:8px\">Entrar</h1><p class=\"sub\">Acesse seu painel financeiro.</p></div>" +
+    flashHtml() +
+    '<div id="login-err" class="banner banner-err" role="alert" hidden>' + ic("alert") + "<div><strong>Não foi possível entrar</strong>E-mail ou senha incorretos. Confira os dados e tente novamente.</div></div>" +
+    '<form id="login-form" novalidate>' +
+      '<div class="field"><label for="l-email">E-mail</label><input class="input" id="l-email" name="email" type="email" autocomplete="email" value="' + esc(state.loginPrefill) + '" placeholder="seuemail@exemplo.com"><div class="field-err" id="l-email-err" hidden></div></div>' +
+      '<div class="field"><label for="l-senha">Senha</label><div class="pass-wrap"><input class="input" id="l-senha" name="senha" type="password" autocomplete="current-password" placeholder="Sua senha"><button class="pass-toggle" type="button" data-action="toggle-pass" data-for="l-senha" aria-label="Mostrar senha">' + ic("eye") + "</button></div><div class=\"field-err\" id=\"l-senha-err\" hidden></div></div>" +
+      '<button class="btn btn-primary btn-block" type="submit" id="l-submit">Entrar</button>' +
+    "</form>" +
+    '<p class="auth-alt">Ainda não tem conta? <a href="#cadastro">Criar conta</a></p>' +
+    '<div class="annot-box"><span class="annot-title">Protótipo · acesso de demonstração</span><div class="row"><button class="btn btn-secondary btn-sm" type="button" data-action="demo-fill" data-role="user">Preencher usuário final</button><button class="btn btn-secondary btn-sm" type="button" data-action="demo-fill" data-role="admin">Preencher administrador</button></div><span>Qualquer outra combinação mostra a mensagem de erro genérica (US01).</span></div>'
+  );
+};
+
+SCR.cadastro = function () {
+  return authLayout("cadastro",
+    "<div><div class=\"eyebrow\">" + annot("cadastro") + "</div><h1 style=\"margin-top:8px\">Criar conta</h1><p class=\"sub\">Leva menos de um minuto. Depois, conecte suas contas.</p></div>" +
+    '<form id="cad-form" novalidate>' +
+      '<div class="field"><label for="c-nome">Nome completo</label><input class="input" id="c-nome" type="text" autocomplete="name" placeholder="Como você se chama?"><div class="field-err" id="c-nome-err" hidden></div></div>' +
+      '<div class="field"><label for="c-email">E-mail</label><input class="input" id="c-email" type="email" autocomplete="email" placeholder="seuemail@exemplo.com"><div class="field-err" id="c-email-err" hidden></div></div>' +
+      '<div class="field"><label for="c-senha">Senha</label><div class="pass-wrap"><input class="input" id="c-senha" type="password" autocomplete="new-password" aria-describedby="c-rules"><button class="pass-toggle" type="button" data-action="toggle-pass" data-for="c-senha" aria-label="Mostrar senha">' + ic("eye") + '</button></div><ul class="rules" id="c-rules"><li data-rule="len">' + ic("check") + 'Pelo menos 8 caracteres</li><li data-rule="mix">' + ic("check") + "Letras e números</li></ul><div class=\"field-err\" id=\"c-senha-err\" hidden></div></div>" +
+      '<div class="field"><label for="c-conf">Confirmar senha</label><input class="input" id="c-conf" type="password" autocomplete="new-password"><div class="field-err" id="c-conf-err" hidden></div></div>' +
+      '<label class="check"><input type="checkbox" id="c-termos"><span>Li e aceito os Termos de Uso e a Política de Privacidade, que explicam como meus dados são tratados conforme a LGPD.</span></label><div class="field-err" id="c-termos-err" hidden></div>' +
+      '<button class="btn btn-primary btn-block" type="submit">Criar conta</button>' +
+    "</form>" +
+    '<p class="auth-alt">Já tem conta? <a href="#login">Entrar</a></p>'
+  );
+};
+
+function totals(list) {
+  var r = 0, d = 0;
+  list.forEach(function (t) { if (t.tipo === "receita") r += t.valor; else d += t.valor; });
+  return { r: r, d: d };
+}
+function monthsAvailable() {
+  var m = {}; m["2026-10"] = 1;
+  data().transacoes.forEach(function (t) { m[t.data.slice(0, 7)] = 1; });
+  return Object.keys(m).sort().reverse();
+}
+function monthOptions(sel) {
+  return monthsAvailable().map(function (ym) { var n = mesNome(ym); return '<option value="' + ym + '"' + (ym === sel ? " selected" : "") + ">" + n.charAt(0).toUpperCase() + n.slice(1) + "</option>"; }).join("");
+}
+function txMonth(ym) { var d = data(); return d.transacoes.filter(function (t) { return t.data.slice(0, 7) === ym; }); }
+function byCat(list) {
+  var m = {};
+  list.forEach(function (t) { if (t.tipo !== "despesa" || !t.cat) return; m[t.cat] = (m[t.cat] || 0) + t.valor; });
+  return Object.keys(m).map(function (k) { return { cat: catBy(k), valor: m[k] }; }).sort(function (a, b) { return b.valor - a.valor; });
+}
+function saldoContas() {
+  var d = data(), s = 0, f = 0, n = 0;
+  d.contas.forEach(function (k) { if (k.tipo === "Cartão de crédito") f += -k.saldo; else { s += k.saldo; n++; } });
+  return { saldo: s, faturas: f, nContas: n };
+}
+function contaLabel(k) {
+  if (!k) return "Lançamento manual";
+  var i = instDaConta(k);
+  return (i ? i.nome : "") + " · " + (k.tipo === "Cartão de crédito" ? "Cartão" : k.tipo === "Poupança" ? "Poupança" : "C/C") + " •• " + k.numero;
+}
+function emptyConnect(t) {
+  return '<div class="card"><div class="empty"><div class="empty-ic">' + ic("link") + "</div><h2>Conecte sua primeira conta</h2><p>Autorize o compartilhamento de dados de um banco pelo Open Finance para ver saldo, extrato e gastos aqui.</p>" +
+    '<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center"><button class="btn btn-primary" type="button" data-action="start-connect">' + ic("plus") + "Conectar conta</button>" +
+    (t === "extrato" ? "" : '<a class="btn btn-secondary" href="#lancamento">Registrar lançamento manual</a>') + "</div></div></div>";
+}
+
+SCR.inicio = function () {
+  var d = data();
+  var nome = state.session.nome.split(" ")[0];
+  var head = pageHead("inicio", "Olá, " + esc(nome), "Resumo de " + mesNome("2026-10") + ".", '<button class="btn btn-primary" type="button" data-action="start-connect">' + ic("plus") + "Conectar conta</button>");
+  if (!d.conexoes.length && !d.transacoes.length) return head + flashHtml() + emptyConnect("inicio");
+  var alerts = "";
+  d.conexoes.forEach(function (c) {
+    var i = instBy(c.inst);
+    if (c.status === "expirada") alerts += '<div class="banner banner-warn">' + ic("alert") + "<div><strong>O consentimento da " + esc(i.nome) + " expirou em " + dDate(c.dataExpiracao) + ".</strong>Os valores dessa instituição são da última atualização (" + dDate(c.ultimaAtualizacao) + "). As demais contas continuam atualizadas." + '<div class="banner-act"><button class="btn btn-secondary btn-sm" type="button" data-action="renew" data-id="' + c.id + '">Renovar consentimento</button></div></div></div>';
+    if (state.failedConn === c.id) alerts += '<div class="banner banner-err">' + ic("alert") + "<div><strong>" + esc(i.nome) + " não respondeu na última atualização.</strong>Exibindo os dados de " + quando(c.ultimaAtualizacao) + ". As demais instituições foram atualizadas normalmente.</div></div>";
+  });
+  var sc = saldoContas();
+  var accRows = d.conexoes.map(function (c) {
+    var i = instBy(c.inst);
+    return contasDe(c.id).map(function (k) {
+      var card = k.tipo === "Cartão de crédito";
+      return '<div class="acc">' + mono(i) + '<div><div class="acc-name">' + esc(i.nome) + '</div><div class="acc-sub">' + esc(k.tipo) + " •• " + esc(k.numero) + (c.status === "expirada" ? ' <span class="pill pill-warn">' + ic("clock") + "Dado de " + pad(c.ultimaAtualizacao.getDate()) + "/" + pad(c.ultimaAtualizacao.getMonth() + 1) + "</span>" : "") + "</div></div>" +
+        '<div class="acc-val">' + money(card ? -k.saldo : k.saldo) + (card ? "<small>fatura aberta</small>" : "") + "</div></div>";
+    }).join("");
+  }).join("");
+  var out = totals(txMonth("2026-10")), set = totals(txMonth("2026-09"));
+  var dp = pct(out.d, set.d), rp = pct(out.r, set.r);
+  var cats = byCat(txMonth("2026-10"));
+  var maxC = cats.length ? cats[0].valor : 1;
+  var bars = cats.slice(0, 6).map(function (x) {
+    return '<div class="bar-row"><span class="bar-name"><span class="dot" style="background:var(' + x.cat.c + ')"></span>' + esc(x.cat.nome) + '</span><span class="bar-val">' + money(x.valor) + '</span><div class="bar-track"><div class="bar-fill" style="width:' + (x.valor / maxC * 100).toFixed(1) + "%;background:var(" + x.cat.c + ')"></div></div></div>';
+  }).join("");
+  var semCat = txMonth("2026-10").filter(function (t) { return !t.cat; }).length;
+  var recent = d.transacoes.slice().sort(function (a, b) { return a.data < b.data ? 1 : -1; }).slice(0, 5).map(function (t) {
+    var k = contaBy(t.conta);
+    return '<div class="tx"><span class="tx-desc">' + esc(t.descricao) + '</span><span class="tx-val ' + (t.tipo === "receita" ? "rec" : "") + '">' + (t.tipo === "receita" ? "+ " : "− ") + money(t.valor) + '</span><span class="tx-meta">' + dShort(t.data) + " · " + esc(contaLabel(k)) + "</span></div>";
+  }).join("");
+  return head + flashHtml() + alerts +
+    '<div class="grid">' +
+      '<section class="card s7" aria-labelledby="h-saldo"><div class="card-head"><h2 id="h-saldo">Saldo em contas</h2><a class="link-btn" href="#conexoes">Gerenciar conexões' + ic("chev") + "</a></div>" +
+        '<div style="display:grid;gap:10px"><div class="hero-num num">' + money(sc.saldo) + '</div><div class="hero-meta"><span>' + sc.nContas + " contas em " + d.conexoes.length + " instituições</span>" + (sc.faturas ? "<span>Faturas de cartão: <strong class=\"num\">" + money(sc.faturas) + "</strong></span>" : "") + "</div></div>" +
+        '<div class="acc-list">' + accRows + "</div></section>" +
+      '<section class="card s5" aria-labelledby="h-cmp"><div class="card-head"><h2 id="h-cmp">Comparativo com setembro</h2><span class="meta">Outubro até o dia 20</span></div>' +
+        '<div class="cmp"><div class="cmp-row"><span class="cmp-label">Despesas</span><span class="delta ' + (dp <= 0 ? "good" : "bad") + '">' + ic(dp <= 0 ? "down" : "up") + Math.abs(dp) + "% " + (dp <= 0 ? "menor" : "maior") + '</span></div><div class="cmp-val">' + money(out.d) + '</div><div class="cmp-prev">Setembro: ' + money(set.d) + "</div></div>" +
+        '<div class="cmp"><div class="cmp-row"><span class="cmp-label">Receitas</span><span class="delta ' + (rp >= 0 ? "good" : "bad") + '">' + ic(rp >= 0 ? "up" : "down") + Math.abs(rp) + "% " + (rp >= 0 ? "maior" : "menor") + '</span></div><div class="cmp-val">' + money(out.r) + '</div><div class="cmp-prev">Setembro: ' + money(set.r) + "</div></div>" +
+        '<div class="cmp"><div class="cmp-row"><span class="cmp-label">Saldo do mês</span></div><div class="cmp-val">' + money(out.r - out.d) + '</div><div class="cmp-prev">Receitas menos despesas de outubro</div></div>' +
+      "</section>" +
+      '<section class="card s5" aria-labelledby="h-cat"><div class="card-head"><h2 id="h-cat">Gastos por categoria</h2><a class="link-btn" href="#graficos">Ver gráficos' + ic("chev") + "</a></div>" +
+        (bars ? '<div class="bars">' + bars + "</div>" : '<p class="footnote">Nenhuma despesa categorizada neste mês.</p>') +
+        (semCat ? '<p class="footnote">' + semCat + " transaç" + (semCat > 1 ? "ões" : "ão") + ' sem categoria não entram neste resumo. <a href="#extrato">Categorizar no extrato</a></p>' : "") + "</section>" +
+      '<section class="card s7" aria-labelledby="h-rec"><div class="card-head"><h2 id="h-rec">Últimas movimentações</h2><a class="link-btn" href="#extrato">Ver extrato' + ic("chev") + '</a></div><div class="mini-tx">' + (recent || '<p class="footnote">Nenhuma movimentação ainda.</p>') + "</div></section>" +
+    "</div>";
+};
+
+function catOptions(t) {
+  return CATS.filter(function (c) { return c.tipo === "ambos" || c.tipo === t.tipo; }).map(function (c) { return '<option value="' + c.id + '"' + (t.cat === c.id ? " selected" : "") + ">" + esc(c.nome) + "</option>"; }).join("");
+}
+function txRows() {
+  var d = data(), f = state.filters;
+  var list = d.transacoes.filter(function (t) {
+    if (t.data.slice(0, 7) !== f.periodo) return false;
+    if (f.conta === "manual" && t.conta) return false;
+    if (f.conta !== "todas" && f.conta !== "manual" && t.conta !== f.conta) return false;
+    if (f.tipo !== "todos" && t.tipo !== f.tipo) return false;
+    if (f.q && t.descricao.toLowerCase().indexOf(f.q.toLowerCase()) < 0) return false;
+    return true;
+  }).sort(function (a, b) { return a.data < b.data ? 1 : a.data > b.data ? -1 : 0; });
+  var tt = totals(list);
+  var rows = list.map(function (t) {
+    var k = contaBy(t.conta), c = catBy(t.cat);
+    var conta = k ? esc(contaLabel(k)) : '<span class="manual-tag">' + ic("wallet") + "Lançamento manual</span>";
+    return "<tr>" +
+      '<td class="td-data num">' + dISO(t.data) + "</td>" +
+      '<td class="td-desc"><strong>' + esc(t.descricao) + '</strong><span class="m-meta">' + dShort(t.data) + " · " + (k ? esc(contaLabel(k)) : "Lançamento manual") + "</span></td>" +
+      '<td class="td-cat"><div class="cat-cell">' + (c ? '<span class="dot" style="background:var(' + c.c + ')"></span>' : "") + '<label class="sr-only" for="cat-' + t.id + '">Categoria de ' + esc(t.descricao) + '</label><select class="cat-select' + (c ? "" : " unset") + '" id="cat-' + t.id + '" data-tx="' + t.id + '">' + (c ? "" : '<option value="" selected>Escolher categoria</option>') + catOptions(t) + "</select></div></td>" +
+      '<td class="td-conta">' + conta + "</td>" +
+      '<td class="td-valor r"><span class="' + (t.tipo === "receita" ? "val-rec" : "val-des") + '">' + (t.tipo === "receita" ? "+ " : "− ") + money(t.valor) + "</span></td>" +
+    "</tr>";
+  }).join("");
+  var semCat = list.filter(function (t) { return !t.cat; }).length;
+  return {
+    sum: "<span><strong>" + list.length + "</strong> movimentações</span><span>Receitas <strong>" + money(tt.r) + "</strong></span><span>Despesas <strong>" + money(tt.d) + "</strong></span>" + (semCat ? '<span class="pill pill-warn">' + ic("alert") + semCat + " sem categoria</span>" : ""),
+    body: rows || '<tr><td colspan="5"><div class="empty" style="padding:28px 8px"><p>Nenhuma movimentação encontrada com esses filtros.</p></div></td></tr>'
+  };
+}
+SCR.extrato = function () {
+  var d = data(), f = state.filters;
+  var head = pageHead("extrato", "Extrato", "Movimentações de todas as contas conectadas e lançamentos manuais, da mais recente para a mais antiga.", '<button class="btn btn-primary" type="button" data-go="lancamento">' + ic("plus") + "Novo lançamento</button>");
+  if (!d.transacoes.length && !d.conexoes.length) return head + flashHtml() + emptyConnect("extrato");
+  var contas = d.contas.map(function (k) { return '<option value="' + k.id + '"' + (f.conta === k.id ? " selected" : "") + ">" + esc(contaLabel(k)) + "</option>"; }).join("");
+  var r = txRows();
+  return head + flashHtml() +
+    '<section class="card" aria-label="Movimentações">' +
+      '<div class="filters">' +
+        '<div class="field"><label for="f-periodo">Período</label><select class="select" id="f-periodo" data-filter="periodo">' + monthOptions(f.periodo) + "</select></div>" +
+        '<div class="field"><label for="f-conta">Conta de origem</label><select class="select" id="f-conta" data-filter="conta"><option value="todas">Todas as contas</option>' + contas + '<option value="manual"' + (f.conta === "manual" ? " selected" : "") + ">Lançamentos manuais</option></select></div>" +
+        '<div class="field"><label for="f-tipo">Tipo</label><select class="select" id="f-tipo" data-filter="tipo"><option value="todos">Receitas e despesas</option><option value="receita"' + (f.tipo === "receita" ? " selected" : "") + '>Receitas</option><option value="despesa"' + (f.tipo === "despesa" ? " selected" : "") + ">Despesas</option></select></div>" +
+        '<div class="field grow"><label for="f-q">Buscar</label><div class="search">' + ic("search") + '<input class="input" id="f-q" type="search" data-filter="q" placeholder="Descrição da movimentação" value="' + esc(f.q) + '"></div></div>' +
+      "</div>" +
+      '<div class="sum-line" id="tx-sum">' + r.sum + "</div>" +
+      '<div class="table-wrap"><table class="tx-table"><thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Conta de origem</th><th class="r">Valor</th></tr></thead><tbody id="tx-body">' + r.body + "</tbody></table></div>" +
+    "</section>";
+};
+SCR.lancamento = SCR.extrato;
+AFTER.lancamento = function () { openLancamento(); };
+
+function openLancamento() {
+  var tipo = "despesa";
+  var html = '<div class="modal-head"><div><div class="eyebrow">' + annot("lancamento") + '</div><h2 id="m-title" style="margin-top:6px">Novo lançamento</h2><p class="sub" style="color:var(--fg-2);margin-top:4px">Registre uma receita ou despesa que não passou por uma conta conectada, como um pagamento em dinheiro.</p></div><button class="modal-x" type="button" data-action="modal-close" aria-label="Fechar">' + ic("x") + "</button></div>" +
+    '<form id="lanc-form" novalidate>' +
+      '<div class="field"><span class="lbl" id="lt-lbl">Tipo</span><div class="seg" role="group" aria-labelledby="lt-lbl"><button type="button" data-action="lanc-tipo" data-v="despesa" aria-pressed="true">Despesa</button><button type="button" data-action="lanc-tipo" data-v="receita" aria-pressed="false">Receita</button></div></div>' +
+      '<div class="form-2"><div class="field"><label for="m-valor">Valor</label><div class="money"><span>R$</span><input class="input" id="m-valor" inputmode="decimal" placeholder="0,00" autocomplete="off"></div><div class="field-err" id="m-valor-err" hidden></div></div>' +
+      '<div class="field"><label for="m-data">Data</label><input class="input" id="m-data" type="date" value="2026-10-20" max="2026-12-31"><div class="field-err" id="m-data-err" hidden></div></div></div>' +
+      '<div class="field"><label for="m-desc">Descrição</label><input class="input" id="m-desc" type="text" maxlength="60" placeholder="Ex.: Feira, lanche, venda de item usado"><div class="field-err" id="m-desc-err" hidden></div></div>' +
+      '<div class="field"><label for="m-cat">Categoria <span style="font-weight:400;color:var(--muted)">(opcional)</span></label><select class="select" id="m-cat"><option value="">Sem categoria</option>' + catOptions({ tipo: tipo, cat: null }) + "</select></div>" +
+      '<div class="modal-acts"><button class="btn btn-secondary" type="button" data-action="modal-close">Cancelar</button><button class="btn btn-primary" type="submit">Salvar lançamento</button></div>' +
+    "</form>";
+  openModal(html, "m-title", function () { go("extrato"); });
+  setTimeout(function () { var v = document.getElementById("m-valor"); if (v) v.focus(); }, 30);
+}
+
+SCR.graficos = function () {
+  var d = data();
+  var head = pageHead("graficos", "Gráficos", "Padrões de receitas, despesas e gastos por categoria.");
+  if (!d.transacoes.length && !d.conexoes.length) return head + emptyConnect("graficos");
+  var p = state.chartPeriodo;
+  var list = txMonth(p), cats = byCat(list);
+  var semCat = list.filter(function (t) { return !t.cat && t.tipo === "despesa"; }).length;
+  var tot = cats.reduce(function (s, x) { return s + x.valor; }, 0);
+  var legend = cats.map(function (x, i) {
+    return '<tr data-i="' + i + '"><td><span class="legend-key"><span class="dot" style="background:var(' + x.cat.c + ')"></span>' + esc(x.cat.nome) + '</span></td><td class="r num">' + money(x.valor) + '</td><td class="r num">' + (tot ? (x.valor / tot * 100).toFixed(1).replace(".", ",") : "0") + "%</td></tr>";
+  }).join("");
+  return head +
+    '<div class="grid">' +
+      '<section class="card s12" aria-labelledby="h-pizza"><div class="card-head"><h2 id="h-pizza">Gastos por categoria</h2><div class="field" style="min-width:200px"><label class="sr-only" for="g-periodo">Mês</label><select class="select" id="g-periodo" data-chart="periodo">' + monthOptions(p) + "</select></div></div>" +
+        (cats.length ? '<div class="donut-layout"><div class="donut chart-wrap" id="donut">' + donutSVG(cats, tot) + '</div><div class="table-wrap"><table class="legend-table" id="legend"><thead><tr><th>Categoria</th><th class="r">Valor</th><th class="r">Participação</th></tr></thead><tbody>' + legend + "</tbody></table></div></div>" : '<p class="footnote">Nenhuma despesa categorizada no período.</p>') +
+        (semCat ? '<div class="banner banner-info">' + ic("info") + "<div>" + semCat + " despesa" + (semCat > 1 ? "s" : "") + ' sem categoria não aparece' + (semCat > 1 ? "m" : "") + ' no gráfico. <a href="#extrato">Categorizar no extrato</a></div></div>' : "") +
+      "</section>" +
+      '<section class="card s12" aria-labelledby="h-linha"><div class="card-head"><h2 id="h-linha">Receitas e despesas por mês</h2><div class="line-legend"><span><i style="background:var(--c1)"></i>Receitas</span><span><i style="background:var(--c2)"></i>Despesas</span></div></div>' +
+        '<div class="line-chart chart-wrap" id="linechart"></div><p class="footnote">Maio a outubro de 2026. Outubro considera as movimentações até o dia 20. Passe o cursor sobre o gráfico para ver os valores de cada mês.</p></section>' +
+    "</div>";
+};
+function donutSVG(cats, tot) {
+  var cx = 110, cy = 110, R = 100, r = 64, a0 = -Math.PI / 2, out = "";
+  cats.forEach(function (x, i) {
+    var a1 = a0 + x.valor / tot * Math.PI * 2;
+    var large = a1 - a0 > Math.PI ? 1 : 0;
+    var p = function (rad, a) { return (cx + rad * Math.cos(a)).toFixed(2) + " " + (cy + rad * Math.sin(a)).toFixed(2); };
+    var dpath = cats.length === 1
+      ? "M " + (cx - R) + " " + cy + " A " + R + " " + R + " 0 1 1 " + (cx + R) + " " + cy + " A " + R + " " + R + " 0 1 1 " + (cx - R) + " " + cy + " M " + (cx - r) + " " + cy + " A " + r + " " + r + " 0 1 0 " + (cx + r) + " " + cy + " A " + r + " " + r + " 0 1 0 " + (cx - r) + " " + cy + " Z"
+      : "M " + p(R, a0) + " A " + R + " " + R + " 0 " + large + " 1 " + p(R, a1) + " L " + p(r, a1) + " A " + r + " " + r + " 0 " + large + " 0 " + p(r, a0) + " Z";
+    out += '<path d="' + dpath + '" data-i="' + i + '" style="fill:var(' + x.cat.c + ');stroke:var(--surface);stroke-width:2;stroke-linejoin:round" fill-rule="evenodd"><title>' + esc(x.cat.nome) + ": " + money(x.valor) + "</title></path>";
+    a0 = a1;
+  });
+  return '<svg viewBox="0 0 220 220" role="img" aria-label="Gráfico de pizza com os gastos por categoria. Os valores estão na tabela ao lado.">' + out +
+    '<text id="d-l1" x="110" y="102" text-anchor="middle" style="fill:var(--muted);font-size:11px;font-weight:600;letter-spacing:.06em">TOTAL</text>' +
+    '<text id="d-l2" x="110" y="124" text-anchor="middle" style="fill:var(--fg);font-size:17px;font-weight:700;font-family:var(--f-display)">' + money(tot) + "</text>" +
+    '<text id="d-l3" x="110" y="142" text-anchor="middle" style="fill:var(--muted);font-size:11px">' + cats.length + " categorias</text></svg>";
+}
+function monthSeries() {
+  var s = HIST.slice();
+  var set = totals(txMonth("2026-09")), out = totals(txMonth("2026-10"));
+  s.push({ m: "Set", r: set.r, d: set.d });
+  s.push({ m: "Out*", r: out.r, d: out.d });
+  return s;
+}
+var LC = null;
+function lineGeom(W) {
+  var s = monthSeries(), narrow = W < 520;
+  var H = narrow ? 220 : 260, L = narrow ? 52 : 64, Rm = narrow ? 70 : 84, T = 16, B = 34;
+  var max = Math.max.apply(null, s.map(function (x) { return Math.max(x.r, x.d); }));
+  var top = Math.ceil(max / 2000) * 2000;
+  return { s: s, W: W, H: H, L: L, Rm: Rm, T: T, B: B, top: top,
+    xs: function (i) { return L + i * (W - L - Rm) / (s.length - 1); },
+    ys: function (v) { return T + (H - T - B) * (1 - v / top); } };
+}
+function lineSVG(G) {
+  var s = G.s, W = G.W, H = G.H, L = G.L, Rm = G.Rm, T = G.T, B = G.B, xs = G.xs, ys = G.ys, top = G.top;
+  var g = "";
+  for (var v = 0; v <= top; v += 2000) {
+    g += '<line x1="' + L + '" x2="' + (W - Rm) + '" y1="' + ys(v) + '" y2="' + ys(v) + '" style="stroke:' + (v === 0 ? "var(--axis)" : "var(--grid)") + ';stroke-width:1"/>';
+    g += '<text x="' + (L - 10) + '" y="' + (ys(v) + 4) + '" text-anchor="end" style="fill:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums">' + (v === 0 ? "R$ 0" : "R$ " + (v / 1000) + " mil") + "</text>";
+  }
+  s.forEach(function (x, i) { g += '<text x="' + xs(i) + '" y="' + (H - 10) + '" text-anchor="middle" style="fill:var(--muted);font-size:12px">' + x.m + "</text>"; });
+  var path = function (k) { return s.map(function (x, i) { return (i ? "L" : "M") + xs(i).toFixed(1) + " " + ys(x[k]).toFixed(1); }).join(" "); };
+  var last = s.length - 1;
+  var lines = '<path d="' + path("r") + '" style="fill:none;stroke:var(--c1);stroke-width:2;stroke-linejoin:round;stroke-linecap:round"/>' +
+    '<path d="' + path("d") + '" style="fill:none;stroke:var(--c2);stroke-width:2;stroke-linejoin:round;stroke-linecap:round"/>' +
+    '<circle cx="' + xs(last) + '" cy="' + ys(s[last].r) + '" r="4.5" style="fill:var(--c1);stroke:var(--surface);stroke-width:2"/>' +
+    '<circle cx="' + xs(last) + '" cy="' + ys(s[last].d) + '" r="4.5" style="fill:var(--c2);stroke:var(--surface);stroke-width:2"/>' +
+    '<text x="' + (xs(last) + 10) + '" y="' + (ys(s[last].r) + 4) + '" style="fill:var(--fg-2);font-size:12px;font-weight:600">Receitas</text>' +
+    '<text x="' + (xs(last) + 10) + '" y="' + (ys(s[last].d) + 4) + '" style="fill:var(--fg-2);font-size:12px;font-weight:600">Despesas</text>';
+  var w = (W - L - Rm) / (s.length - 1);
+  var hits = s.map(function (x, i) {
+    return '<rect class="hit" data-i="' + i + '" x="' + (xs(i) - w / 2) + '" y="' + T + '" width="' + w + '" height="' + (H - T - B) + '" style="fill:transparent"/>';
+  }).join("");
+  return '<svg viewBox="0 0 ' + W + " " + H + '" width="' + W + '" height="' + H + '" role="img" aria-label="Gráfico de linhas com receitas e despesas de maio a outubro de 2026.">' + g +
+    '<line id="xh" x1="0" x2="0" y1="' + T + '" y2="' + (H - B) + '" style="stroke:var(--axis);stroke-width:1;stroke-dasharray:3 3" visibility="hidden"/>' + lines +
+    '<circle id="mk-r" r="5" style="fill:var(--c1);stroke:var(--surface);stroke-width:2" visibility="hidden"/><circle id="mk-d" r="5" style="fill:var(--c2);stroke:var(--surface);stroke-width:2" visibility="hidden"/>' + hits + "</svg>" +
+    '<div class="tip" id="ltip" hidden></div>';
+}
+var MESF = { Mai: "Maio", Jun: "Junho", Jul: "Julho", Ago: "Agosto", Set: "Setembro", "Out*": "Outubro (até o dia 20)" };
+function drawLine() {
+  var lc = document.getElementById("linechart");
+  if (!lc) return;
+  var G = lineGeom(Math.max(280, Math.floor(lc.clientWidth)));
+  LC = G.W;
+  lc.innerHTML = lineSVG(G);
+  var s = G.s, svg = lc.querySelector("svg"), tip = document.getElementById("ltip");
+  var xh = svg.querySelector("#xh"), mr = svg.querySelector("#mk-r"), md = svg.querySelector("#mk-d");
+  var show = function (i) {
+    var x = s[i];
+    xh.setAttribute("x1", G.xs(i)); xh.setAttribute("x2", G.xs(i)); xh.setAttribute("visibility", "visible");
+    mr.setAttribute("cx", G.xs(i)); mr.setAttribute("cy", G.ys(x.r)); mr.setAttribute("visibility", "visible");
+    md.setAttribute("cx", G.xs(i)); md.setAttribute("cy", G.ys(x.d)); md.setAttribute("visibility", "visible");
+    tip.hidden = false;
+    tip.innerHTML = "<strong>" + MESF[x.m] + " de 2026</strong><span><i style=\"background:var(--c1)\"></i>Receitas " + money(x.r) + "</span><br><span><i style=\"background:var(--c2)\"></i>Despesas " + money(x.d) + "</span>";
+    tip.style.left = Math.max(100, Math.min(G.W - 100, G.xs(i))) + "px";
+    tip.style.top = G.ys(Math.max(x.r, x.d)) + "px";
+  };
+  var hide = function () { tip.hidden = true; [xh, mr, md].forEach(function (el) { el.setAttribute("visibility", "hidden"); }); };
+  svg.addEventListener("mousemove", function (e) { var h = e.target.closest(".hit"); if (h) show(+h.getAttribute("data-i")); });
+  svg.addEventListener("click", function (e) { var h = e.target.closest(".hit"); if (h) show(+h.getAttribute("data-i")); });
+  svg.addEventListener("mouseleave", hide);
+}
+window.addEventListener("resize", function () {
+  var lc = document.getElementById("linechart");
+  if (current === "graficos" && lc && Math.abs(Math.floor(lc.clientWidth) - LC) > 4) drawLine();
+});
+AFTER.graficos = function () {
+  var donut = document.getElementById("donut"), legend = document.getElementById("legend");
+  if (donut) {
+    var cats = byCat(txMonth(state.chartPeriodo)), tot = cats.reduce(function (s, x) { return s + x.valor; }, 0);
+    var setOn = function (i) {
+      donut.classList.toggle("has-hover", i != null);
+      donut.querySelectorAll("path").forEach(function (p) { p.classList.toggle("on", p.getAttribute("data-i") == i); });
+      legend.querySelectorAll("tr[data-i]").forEach(function (tr) { tr.classList.toggle("on", tr.getAttribute("data-i") == i); });
+      var x = i != null ? cats[i] : null;
+      document.getElementById("d-l1").textContent = x ? x.cat.nome.toUpperCase() : "TOTAL";
+      document.getElementById("d-l2").textContent = money(x ? x.valor : tot);
+      document.getElementById("d-l3").textContent = x ? (x.valor / tot * 100).toFixed(1).replace(".", ",") + "% do total" : cats.length + " categorias";
+    };
+    [donut, legend].forEach(function (el) {
+      el.addEventListener("mouseover", function (e) { var t = e.target.closest("[data-i]"); if (t) setOn(t.getAttribute("data-i")); });
+      el.addEventListener("mouseleave", function () { setOn(null); });
+    });
+  }
+  drawLine();
+};
+
+function reportData() {
+  var d = data(), r = state.report;
+  var list = d.transacoes.filter(function (t) { return t.data >= r.inicio && t.data <= r.fim; });
+  return { list: list, tt: totals(list), cats: byCat(list), semCat: list.filter(function (t) { return !t.cat; }).length };
+}
+SCR.relatorios = function () {
+  var r = state.report;
+  var d = data();
+  var head = pageHead("relatorios", "Relatórios", "Gere um resumo de receitas, despesas e saldo para o período que quiser e exporte em PDF ou CSV.");
+  if (!d.transacoes.length && !d.conexoes.length) return head + emptyConnect("relatorios");
+  var rep = "";
+  if (r.gerado) {
+    var x = reportData();
+    if (!x.list.length) rep = '<div class="report-doc"><div class="empty" style="padding:24px 8px"><p>Nenhuma movimentação entre ' + dISO(r.inicio) + " e " + dISO(r.fim) + ".</p></div></div>";
+    else {
+      var rows = x.cats.map(function (c) { return '<tr><td><span class="legend-key"><span class="dot" style="background:var(' + c.cat.c + ')"></span>' + esc(c.cat.nome) + '</span></td><td class="r num">' + money(c.valor) + '</td><td class="r num">' + (c.valor / x.tt.d * 100).toFixed(1).replace(".", ",") + "%</td></tr>"; }).join("");
+      rep = '<div class="report-doc" id="report"><header><h3>Relatório de ' + dISO(r.inicio) + " a " + dISO(r.fim) + '</h3><span class="footnote">' + x.list.length + " movimentações · gerado " + quando(new Date()) + "</span></header>" +
+        '<div class="kpis"><div class="kpi"><span>Receitas</span><strong>' + money(x.tt.r) + '</strong></div><div class="kpi"><span>Despesas</span><strong>' + money(x.tt.d) + '</strong></div><div class="kpi"><span>Saldo do período</span><strong>' + money(x.tt.r - x.tt.d) + "</strong></div></div>" +
+        '<div class="table-wrap"><table><thead><tr><th>Despesas por categoria</th><th class="r">Valor</th><th class="r">Participação</th></tr></thead><tbody>' + rows + "</tbody></table></div>" +
+        (x.semCat ? '<p class="footnote">' + x.semCat + " movimentaç" + (x.semCat > 1 ? "ões" : "ão") + " sem categoria entra" + (x.semCat > 1 ? "m" : "") + " nos totais, mas não na tabela por categoria.</p>" : "") +
+        '<div class="conn-acts"><button class="btn btn-primary" type="button" data-action="export" data-fmt="PDF">' + ic("download") + 'Exportar PDF</button><button class="btn btn-secondary" type="button" data-action="export" data-fmt="CSV">' + ic("download") + "Exportar CSV</button></div></div>";
+    }
+  }
+  return head +
+    '<section class="card" aria-labelledby="h-per"><div class="card-head"><h2 id="h-per">Período do relatório</h2></div>' +
+      '<form class="report-form" id="report-form" novalidate><div class="field"><label for="r-ini">Data inicial</label><input class="input" type="date" id="r-ini" value="' + r.inicio + '"></div><div class="field"><label for="r-fim">Data final</label><input class="input" type="date" id="r-fim" value="' + r.fim + '"></div><button class="btn btn-primary" type="submit">Gerar relatório</button></form>' +
+      '<div class="field-err" id="r-err" hidden></div>' + rep +
+    "</section>";
+};
+
+SCR.conexoes = function () {
+  var d = data();
+  var head = pageHead("conexoes", "Minhas conexões", "Instituições que compartilham dados com o UniBank. Você pode atualizar os dados ou revogar o acesso a qualquer momento.", '<button class="btn btn-primary" type="button" data-action="start-connect">' + ic("plus") + "Conectar nova conta</button>");
+  if (!d.conexoes.length) return head + flashHtml() + emptyConnect("conexoes");
+  var cards = d.conexoes.map(function (c) {
+    var i = instBy(c.inst), ks = contasDe(c.id), exp = c.status === "expirada";
+    var err = state.failedConn === c.id ? '<div class="banner banner-err" role="alert">' + ic("alert") + "<div><strong>" + esc(i.nome) + " não respondeu.</strong>Os dados anteriores foram mantidos. Tente atualizar novamente em alguns minutos.</div></div>" : "";
+    return '<article class="conn" aria-labelledby="cn-' + c.id + '"><div class="conn-top">' + mono(i) + '<div><h2 id="cn-' + c.id + '">' + esc(i.nome) + '</h2><span class="footnote">' + esc(i.tipo) + "</span></div>" +
+      (exp ? '<span class="pill pill-warn">' + ic("clock") + "Expirada</span>" : '<span class="pill pill-ok">' + ic("check") + "Ativa</span>") + "</div>" + err +
+      '<dl class="conn-meta"><div class="kv"><dt>Contas</dt><dd>' + ks.map(function (k) { return esc(k.tipo) + " •• " + esc(k.numero); }).join("<br>") + "</dd></div>" +
+      '<div class="kv"><dt>' + (exp ? "Consentimento expirou em" : "Consentimento válido até") + "</dt><dd>" + dDate(c.dataExpiracao) + "</dd></div>" +
+      '<div class="kv"><dt>Última atualização</dt><dd>' + quando(c.ultimaAtualizacao).replace(/^./, function (m) { return m.toUpperCase(); }) + "</dd></div></dl>" +
+      '<div class="conn-acts">' +
+        (exp ? '<button class="btn btn-primary btn-sm" type="button" data-action="renew" data-id="' + c.id + '">' + ic("refresh") + "Renovar consentimento</button>"
+             : '<button class="btn btn-secondary btn-sm" type="button" data-action="refresh-conn" data-id="' + c.id + '">' + ic("refresh") + "<span>Atualizar dados</span></button>") +
+        '<button class="btn btn-danger-ghost btn-sm" type="button" data-action="disconnect" data-id="' + c.id + '">' + ic("unlink") + "Desconectar</button>" +
+        (exp ? '<span class="note">Renove o consentimento para voltar a atualizar os dados.</span>' : "") +
+      "</div></article>";
+  }).join("");
+  return head + flashHtml() + '<div class="conn-list">' + cards + "</div>";
+};
+SCR.desconectar = SCR.conexoes;
+AFTER.desconectar = function () {
+  var d = data();
+  var c = conexaoBy(state.discId) || d.conexoes[0];
+  if (!c) { go("conexoes"); return; }
+  openDisconnect(c.id);
+};
+function openDisconnect(id) {
+  var c = conexaoBy(id), i = instBy(c.inst), ks = contasDe(id);
+  var html = '<div class="modal-head"><div><div class="eyebrow">' + annot("desconectar") + '</div><h2 id="m-title" style="margin-top:6px">Desconectar ' + esc(i.nome) + "?</h2></div><button class=\"modal-x\" type=\"button\" data-action=\"modal-close\" aria-label=\"Fechar\">" + ic("x") + "</button></div>" +
+    '<p style="color:var(--fg-2)">O consentimento será revogado e o UniBank deixará de acessar os dados dessa instituição. Estas contas sairão do seu painel e do extrato:</p>' +
+    '<ul class="share-list">' + ks.map(function (k) { return "<li>" + ic("wallet") + "<div>" + esc(k.tipo) + " •• " + esc(k.numero) + "</div></li>"; }).join("") + "</ul>" +
+    '<div class="banner banner-info">' + ic("shield") + "<div>A desconexão fica registrada no histórico de segurança. Você pode conectar a instituição de novo quando quiser.</div></div>" +
+    '<div class="modal-acts"><button class="btn btn-secondary" type="button" data-action="modal-close">Cancelar</button><button class="btn btn-danger" type="button" data-action="confirm-disconnect" data-id="' + id + '">' + ic("unlink") + "Desconectar e revogar acesso</button></div>";
+  openModal(html, "m-title", function () { go("conexoes"); });
+}
+
+function stepper(n) {
+  var steps = ["Escolher instituição", "Autorizar na instituição", "Confirmação"];
+  return '<ol class="stepper" aria-label="Etapas da conexão">' + steps.map(function (s, i) {
+    var st = i + 1 < n ? "done" : i + 1 === n ? "current" : "next";
+    return '<li data-s="' + st + '"' + (st === "current" ? ' aria-current="step"' : "") + '><span class="n">' + (st === "done" ? ic("check") : i + 1) + "</span>" + s + "</li>";
+  }).join("") + "</ol>";
+}
+SCR.conectar = function () {
+  var d = data(), sel = state.connect.inst;
+  var tiles = INST.map(function (i) {
+    var c = d.conexoes.filter(function (x) { return x.inst === i.codigo; })[0];
+    var ativa = c && c.status === "ativa";
+    var label = ativa ? "Já conectada" : c ? "Consentimento expirado" : i.tipo;
+    return '<button type="button" role="radio" class="inst" data-action="select-inst" data-id="' + i.codigo + '" aria-checked="' + (sel === i.codigo) + '"' + (ativa ? " disabled" : "") + ">" + mono(i) + "<div><strong>" + esc(i.nome) + "</strong><span>" + label + "</span></div></button>";
+  }).join("");
+  var si = sel ? instBy(sel) : null;
+  return '<div class="flow">' + stepper(1) +
+    pageHead("conectar", "Conectar conta", "Escolha a instituição em que você tem conta. Mostramos apenas instituições participantes do Open Finance Brasil.") +
+    '<div class="flow-split"><section class="card" aria-labelledby="h-inst"><div class="card-head"><h2 id="h-inst">Instituições disponíveis</h2></div>' +
+      '<div class="search">' + ic("search") + '<label class="sr-only" for="inst-q">Buscar instituição</label><input class="input" id="inst-q" type="search" placeholder="Buscar pelo nome da instituição"></div>' +
+      '<div class="inst-grid" role="radiogroup" aria-labelledby="h-inst" id="inst-grid">' + tiles + "</div></section>" +
+    '<aside class="card" aria-labelledby="h-how"><div class="card-head"><h2 id="h-how">Como funciona</h2></div><ol class="how">' +
+      "<li><div><strong>Você escolhe a instituição</strong>Selecione o banco em que tem conta.</div></li>" +
+      "<li><div><strong>Autoriza no ambiente dela</strong>Você confirma o compartilhamento no site ou app da própria instituição.</div></li>" +
+      "<li><div><strong>As contas aparecem no painel</strong>Saldo e movimentações passam a ser exibidos no UniBank.</div></li></ol>" +
+      '<div class="banner banner-info">' + ic("lock") + "<div>O UniBank nunca pede a senha do seu banco. Você pode desconectar quando quiser.</div></div></aside></div>" +
+    '<div class="flow-foot"><a class="btn btn-ghost" href="#inicio">Cancelar</a><button class="btn btn-primary" type="button" data-action="continue-connect"' + (si ? "" : ' aria-disabled="true"') + ">" + (si ? "Continuar para " + esc(si.nome) : "Selecione uma instituição") + ic("chev") + "</button></div></div>";
+};
+AFTER.conectar = function () {
+  var q = document.getElementById("inst-q");
+  q.addEventListener("input", function () {
+    var v = q.value.trim().toLowerCase();
+    document.querySelectorAll("#inst-grid .inst").forEach(function (b) { b.hidden = v && b.textContent.toLowerCase().indexOf(v) < 0; });
+  });
+};
+SCR.consentimento = function () {
+  var code = state.connect.inst || "HOR"; state.connect.inst = code;
+  var i = instBy(code), ate = monthsAhead(12);
+  return '<div class="ext">' +
+    '<div class="ext-note">Tela simulada: no sistema real, esta etapa acontece no site ou app da própria instituição. ' + annot("consentimento") + "</div>" +
+    '<header class="ext-bar" style="background:' + i.cor + '">' + '<span class="mono" aria-hidden="true">' + i.codigo.slice(0, 2) + "</span><strong>" + esc(i.nome) + "</strong><span class=\"secure\">" + ic("lock") + "Ambiente seguro</span></header>" +
+    '<main class="ext-main"><div class="ext-card">' +
+      '<div class="req-app">' + '<span class="logo">' + LOGO_SVG + "</span><div><strong>UniBank</strong>quer acessar os seus dados nesta instituição</div></div>" +
+      "<h1>" + esc(state.session.nome) + ", revise o pedido de compartilhamento</h1>" +
+      '<section style="display:grid;gap:12px"><span class="lbl">Dados que serão compartilhados</span><ul class="share-list">' +
+        "<li>" + ic("check") + "<div>Dados cadastrais<span>Nome e dados de identificação</span></div></li>" +
+        "<li>" + ic("check") + "<div>Contas<span>Saldos e extrato de conta corrente e poupança</span></div></li>" +
+        "<li>" + ic("check") + "<div>Cartões de crédito<span>Faturas e transações</span></div></li></ul></section>" +
+      '<div class="terms"><div class="kv"><dt>Finalidade</dt><dd>Gestão financeira pessoal</dd></div><div class="kv"><dt>Prazo</dt><dd>12 meses, até ' + dDate(ate) + "</dd></div></div>" +
+      '<p class="footnote">Você pode revogar este consentimento a qualquer momento, no UniBank ou nesta instituição.</p>' +
+      '<div class="modal-acts"><button class="btn btn-secondary" type="button" data-action="consent-refuse">Recusar</button><button class="btn btn-primary" type="button" data-action="consent-accept" style="background:' + i.cor + ';color:#fff">Autorizar compartilhamento</button></div>' +
+    "</div></main></div>";
+};
+SCR.conectando = function () {
+  var i = instBy(state.connect.inst || "HOR");
+  return '<div class="flow">' + stepper(3) + '<section class="card"><div class="result" aria-live="polite">' +
+    '<div class="result-ic load"><span class="spin" aria-hidden="true"></span></div><div class="eyebrow" style="justify-content:center">' + annot("conectando") + "</div>" +
+    "<h1>Conectando ao " + esc(i.nome) + "</h1><p>Isso costuma levar poucos segundos. Você pode continuar usando o UniBank depois.</p>" +
+    '<ul class="progress" id="prog"><li data-s="done"><span class="st">' + ic("check") + "</span>Autorização recebida</li>" +
+    '<li data-s="run"><span class="st"><span class="spin"></span></span>Buscando suas contas na instituição</li>' +
+    '<li data-s="next"><span class="st"></span>Concluindo a conexão</li></ul></div></section></div>';
+};
+var connTimer = null;
+AFTER.conectando = function () {
+  clearTimeout(connTimer);
+  var code = state.connect.inst || "HOR";
+  var lis = document.querySelectorAll("#prog li");
+  connTimer = setTimeout(function () {
+    if (current !== "conectando") return;
+    if (state.scen.instFail) {
+      log("CONEXAO", false);
+      state.lastConnect = { inst: code, ok: false };
+      go("falha-conexao");
+      return;
+    }
+    lis[1].setAttribute("data-s", "done"); lis[1].querySelector(".st").innerHTML = ic("check");
+    lis[2].setAttribute("data-s", "run"); lis[2].querySelector(".st").innerHTML = '<span class="spin"></span>';
+    connTimer = setTimeout(function () {
+      if (current !== "conectando") return;
+      finishConnect(code);
+      go("conectada");
+    }, 900);
+  }, 1500);
+};
+function finishConnect(code) {
+  var d = data(), novas = [];
+  var existing = d.conexoes.filter(function (c) { return c.inst === code; })[0];
+  if (existing) {
+    existing.status = "ativa"; existing.dataExpiracao = monthsAhead(12); existing.ultimaAtualizacao = new Date();
+    novas = contasDe(existing.id);
+  } else {
+    var id = "c" + (++state.seq);
+    d.conexoes.push({ id: id, inst: code, status: "ativa", dataExpiracao: monthsAhead(12), ultimaAtualizacao: new Date() });
+    var k1 = { id: "k" + (++state.seq), conexao: id, tipo: "Conta corrente", numero: String(3306 + state.seq).slice(-4), saldo: code === "HOR" ? 2150.00 : 980.75 };
+    d.contas.push(k1); novas = [k1];
+    d.transacoes.push({ id: "t" + (++state.seq), data: "2026-10-19", descricao: "Pix recebido - reembolso", valor: 80.00, tipo: "receita", cat: "outros", conta: k1.id });
+    d.transacoes.push({ id: "t" + (++state.seq), data: "2026-10-17", descricao: "Mercado do bairro", valor: 64.30, tipo: "despesa", cat: "alimentacao", conta: k1.id });
+  }
+  log("CONEXAO", true);
+  state.lastConnect = { inst: code, ok: true, contas: novas.map(function (k) { return k.id; }), renew: !!existing };
+}
+SCR.conectada = function () {
+  var lc = state.lastConnect;
+  if (!lc || !lc.ok) { finishConnect(state.connect.inst || "HOR"); lc = state.lastConnect; }
+  var i = instBy(lc.inst);
+  var ks = lc.contas.map(contaBy).filter(Boolean);
+  return '<div class="flow">' + stepper(4) + '<section class="card"><div class="result">' +
+    '<div class="result-ic ok">' + ic("check") + '</div><div class="eyebrow" style="justify-content:center">' + annot("conectada") + "</div>" +
+    "<h1>" + esc(i.nome) + (lc.renew ? " reconectado" : " conectado") + "</h1><p>" + (ks.length === 1 ? "Encontramos 1 conta. Ela já aparece no seu painel e no extrato." : "Encontramos " + ks.length + " contas. Elas já aparecem no seu painel e no extrato.") + "</p>" +
+    '<div class="found acc-list">' + ks.map(function (k) { return '<div class="acc" style="border-top:0">' + mono(i) + '<div><div class="acc-name">' + esc(k.tipo) + '</div><div class="acc-sub">•• ' + esc(k.numero) + '</div></div><div class="acc-val">' + money(k.saldo) + "</div></div>"; }).join("") + "</div>" +
+    '<p>Seu saldo em contas agora é <strong class="num">' + money(saldoContas().saldo) + "</strong>.</p>" +
+    '<div class="acts"><a class="btn btn-primary" href="#inicio">Ir para o início</a><button class="btn btn-secondary" type="button" data-action="start-connect">Conectar outra conta</button></div></div></section></div>';
+};
+SCR["falha-conexao"] = function () {
+  var code = (state.lastConnect && !state.lastConnect.ok && state.lastConnect.inst) || state.connect.inst || "HOR";
+  var i = instBy(code), outras = data().conexoes.filter(function (c) { return c.inst !== code; }).length;
+  return '<div class="flow">' + stepper(3) + '<section class="card"><div class="result" role="alert">' +
+    '<div class="result-ic err">' + ic("alert") + '</div><div class="eyebrow" style="justify-content:center">' + annot("falha-conexao") + "</div>" +
+    "<h1>Não foi possível conectar ao " + esc(i.nome) + "</h1><p>A instituição não respondeu a tempo. Nenhum dado foi compartilhado" + (outras ? " e suas outras " + outras + " conexões continuam funcionando normalmente" : "") + ".</p>" +
+    '<p class="footnote">Isso costuma ser temporário. Tente novamente em alguns minutos.</p>' +
+    '<div class="acts"><button class="btn btn-primary" type="button" data-action="retry-connect">' + ic("refresh") + 'Tentar novamente</button><a class="btn btn-secondary" href="#inicio">Voltar ao início</a></div></div></section></div>';
+};
+
+SCR.logs = function () {
+  return pageHead("logs", "Logs de auditoria", "Registro das ações sensíveis feitas pelos usuários: login, conexão e desconexão de instituições.") +
+    '<div class="banner banner-info">' + ic("lock") + "<div><strong>Registros imutáveis</strong>Os logs são somente leitura: não podem ser editados nem excluídos, nem pelo administrador.</div></div>" +
+    '<section class="card" aria-label="Registros">' +
+      '<div class="filters"><div class="field"><label for="lg-acao">Ação</label><select class="select" id="lg-acao" data-logf="acao"><option value="">Todas as ações</option><option>LOGIN</option><option>CONEXAO</option><option>DESCONEXAO</option></select></div>' +
+      '<div class="field"><label for="lg-res">Resultado</label><select class="select" id="lg-res" data-logf="res"><option value="">Todos</option><option value="1">Sucesso</option><option value="0">Falha</option></select></div>' +
+      '<div class="field grow"><label for="lg-q">Usuário</label><div class="search">' + ic("search") + '<input class="input" id="lg-q" type="search" data-logf="q" placeholder="Buscar por e-mail"></div></div></div>' +
+      '<div class="sum-line" id="lg-sum"></div>' +
+      '<div class="table-wrap"><table><thead><tr><th>Data e hora</th><th>Usuário</th><th>Ação</th><th>Resultado</th></tr></thead><tbody id="lg-body"></tbody></table></div>' +
+    "</section>";
+};
+var logF = { acao: "", res: "", q: "" };
+function renderLogRows() {
+  var list = state.logs.filter(function (l) {
+    if (logF.acao && l.acao !== logF.acao) return false;
+    if (logF.res !== "" && String(+l.sucesso) !== logF.res) return false;
+    if (logF.q && l.usuario.indexOf(logF.q.toLowerCase()) < 0) return false;
+    return true;
+  });
+  document.getElementById("lg-sum").innerHTML = "<span>Exibindo <strong>" + list.length + "</strong> de <strong>" + state.logs.length + "</strong> registros, do mais recente para o mais antigo</span>";
+  document.getElementById("lg-body").innerHTML = list.map(function (l) {
+    return '<tr><td class="mono-cell">' + dFull(l.dataHora) + "</td><td>" + esc(l.usuario) + '</td><td><span class="act-code">' + l.acao + "</span></td><td>" + (l.sucesso ? '<span class="pill pill-ok">' + ic("check") + "Sucesso</span>" : '<span class="pill pill-err">' + ic("x") + "Falha</span>") + "</td></tr>";
+  }).join("") || '<tr><td colspan="4"><p class="footnote" style="padding:16px 0">Nenhum registro com esses filtros.</p></td></tr>';
+}
+AFTER.logs = function () {
+  ["acao", "res", "q"].forEach(function (k) {
+    var el = document.querySelector('[data-logf="' + k + '"]'); el.value = logF[k];
+    el.addEventListener(k === "q" ? "input" : "change", function () { logF[k] = el.value; renderLogRows(); });
+  });
+  renderLogRows();
+};
+
+SCR.servicos = function () {
+  var down = state.scen.svcDown ? "Integração Open Finance" : null;
+  var ok = SERVICOS.length - (down ? 1 : 0);
+  var cards = SERVICOS.map(function (s) {
+    var isDown = s.nome === down;
+    return '<article class="svc' + (isDown ? " down" : "") + '"><div class="svc-top"><h3>' + ic("server") + esc(s.nome) + "</h3>" + (isDown ? '<span class="pill pill-err">' + ic("x") + "Indisponível</span>" : '<span class="pill pill-ok">' + ic("check") + "Disponível</span>") + "</div><p>" + esc(s.desc) + '</p><span class="when">Última verificação: ' + dFull(state.svcCheck) + "</span></article>";
+  }).join("");
+  return pageHead("servicos", "Status dos serviços", "Situação de cada serviço do UniBank no último deploy e na última verificação automática.", '<button class="btn btn-secondary" type="button" data-action="check-services">' + ic("refresh") + "<span>Verificar agora</span></button>") +
+    '<section class="card"><div class="summary-strip"><div><span class="cmp-label">Serviços disponíveis</span><div class="big">' + ok + " de " + SERVICOS.length + "</div></div>" +
+      (down ? '<div class="banner banner-err" style="flex:1;min-width:240px">' + ic("alert") + "<div><strong>" + down + " indisponível</strong>Conexões e atualizações com as instituições estão afetadas. As demais funções seguem disponíveis.</div></div>" : '<div class="banner banner-ok" style="flex:1;min-width:240px">' + ic("check") + "<div>Todos os serviços estão funcionando.</div></div>") +
+    '</div></section><div class="svc-grid">' + cards + "</div>";
+};
+
+/* ======================= Modal e toast ======================= */
+var modalOnClose = null, modalReturn = null;
+function openModal(html, labelId, onClose) {
+  var root = document.getElementById("modal-root");
+  modalReturn = document.activeElement;
+  modalOnClose = onClose || null;
+  root.innerHTML = '<div class="modal-root" data-action="modal-backdrop"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="' + labelId + '">' + html + "</div></div>";
+  var f = root.querySelector(".modal button, .modal input, .modal select");
+  if (f) f.focus();
+}
+function closeModal(silent) {
+  var root = document.getElementById("modal-root");
+  if (!root.innerHTML) return;
+  root.innerHTML = "";
+  var cb = modalOnClose; modalOnClose = null;
+  if (!silent && cb) cb();
+}
+function toast(msg, type) {
+  var el = document.createElement("div");
+  el.className = "toast " + (type || "ok");
+  el.innerHTML = ic(type === "err" ? "alert" : type === "warn" ? "alert" : type === "info" ? "info" : "check") + "<span>" + esc(msg) + "</span>";
+  var box = document.getElementById("toasts");
+  box.appendChild(el);
+  setTimeout(function () { el.remove(); }, 4200);
+}
+function busy(btn, label) {
+  btn.disabled = true;
+  btn.dataset.html = btn.innerHTML;
+  btn.innerHTML = '<span class="spin" aria-hidden="true"></span><span>' + label + "</span>";
+}
+
+/* ======================= Ações ======================= */
+function setErr(id, msg) {
+  var input = document.getElementById(id), err = document.getElementById(id + "-err");
+  if (input) input.setAttribute("aria-invalid", msg ? "true" : "false");
+  if (err) { err.hidden = !msg; err.innerHTML = msg ? ic("alert") + "<span>" + esc(msg) + "</span>" : ""; if (input && msg) input.setAttribute("aria-describedby", id + "-err"); }
+  return !msg;
+}
+var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+function refreshConn(id, btn) {
+  var c = conexaoBy(id), i = instBy(c.inst);
+  busy(btn, "Atualizando…");
+  setTimeout(function () {
+    if (state.scen.instFail) { state.failedConn = id; toast(i.nome + " não respondeu. Os dados anteriores foram mantidos.", "err"); }
+    else { state.failedConn = null; c.ultimaAtualizacao = new Date(); toast("Dados do " + i.nome + " atualizados.", "ok"); }
+    render(false);
+  }, 1100);
+}
+function refreshAll(btn) {
+  var d = data();
+  var ativas = d.conexoes.filter(function (c) { return c.status === "ativa"; });
+  if (!ativas.length) { toast("Nenhuma conexão ativa para atualizar. Renove ou conecte uma instituição.", "warn"); return; }
+  busy(btn, "Atualizando…");
+  setTimeout(function () {
+    var fail = state.scen.instFail ? ativas[0] : null;
+    ativas.forEach(function (c) { if (c !== fail) c.ultimaAtualizacao = new Date(); });
+    state.failedConn = fail ? fail.id : null;
+    var exp = d.conexoes.length - ativas.length;
+    if (fail) toast((ativas.length - 1) + " de " + ativas.length + " instituições atualizadas. " + instBy(fail.inst).nome + " não respondeu; os dados anteriores foram mantidos.", "warn");
+    else toast("Dados atualizados em " + ativas.length + " instituições." + (exp ? " " + exp + " com consentimento expirado não foi atualizada." : ""), "ok");
+    render(false);
+  }, 1200);
+}
+
+document.addEventListener("click", function (e) {
+  var g = e.target.closest("[data-go]");
+  if (g) { e.preventDefault(); closeDrawer(); go(g.getAttribute("data-go")); return; }
+  var a = e.target.closest("[data-action]");
+  if (!a) {
+    var link = e.target.closest('a[href^="#"]');
+    if (link && link.closest("#drawer")) closeDrawer();
+    return;
+  }
+  var act = a.getAttribute("data-action");
+  if (act === "modal-backdrop" && e.target !== a) return;
+  switch (act) {
+    case "logout":
+      state.session = null; state.failedConn = null; state.loginPrefill = ""; toast("Você saiu da sua conta.", "info"); go("login"); break;
+    case "toggle-pass":
+      var inp = document.getElementById(a.getAttribute("data-for"));
+      var show = inp.type === "password"; inp.type = show ? "text" : "password";
+      a.setAttribute("aria-label", show ? "Ocultar senha" : "Mostrar senha"); a.innerHTML = ic(show ? "eyeoff" : "eye"); break;
+    case "demo-fill":
+      var u = state.users.filter(function (x) { return x.role === a.getAttribute("data-role"); })[0];
+      document.getElementById("l-email").value = u.email; document.getElementById("l-senha").value = u.senha;
+      document.getElementById("l-submit").focus(); break;
+    case "refresh-all": refreshAll(a); break;
+    case "refresh-conn": refreshConn(a.getAttribute("data-id"), a); break;
+    case "renew":
+      var cr = conexaoBy(a.getAttribute("data-id")); state.connect = { inst: cr.inst, renew: cr.id }; go("consentimento"); break;
+    case "disconnect": state.discId = a.getAttribute("data-id"); go("desconectar"); break;
+    case "confirm-disconnect":
+      var did = a.getAttribute("data-id"), dc = conexaoBy(did), dn = instBy(dc.inst).nome, dd = data();
+      var kids = contasDe(did).map(function (k) { return k.id; });
+      dd.conexoes = dd.conexoes.filter(function (c) { return c.id !== did; });
+      dd.contas = dd.contas.filter(function (k) { return k.conexao !== did; });
+      dd.transacoes = dd.transacoes.filter(function (t) { return kids.indexOf(t.conta) < 0; });
+      if (state.failedConn === did) state.failedConn = null;
+      log("DESCONEXAO", true);
+      modalOnClose = null; closeModal(true);
+      state.flash = { type: "ok", title: dn + " desconectado", msg: "O acesso foi revogado e as contas dessa instituição saíram do seu painel." };
+      toast(dn + " desconectado. Acesso revogado.", "ok");
+      go("conexoes"); break;
+    case "modal-close": case "modal-backdrop": closeModal(false); break;
+    case "start-connect": state.connect = { inst: null, renew: null }; go("conectar"); break;
+    case "select-inst":
+      state.connect.inst = a.getAttribute("data-id");
+      var dsel = data().conexoes.filter(function (c) { return c.inst === state.connect.inst; })[0];
+      state.connect.renew = dsel ? dsel.id : null;
+      render(false);
+      var again = document.querySelector('.inst[data-id="' + state.connect.inst + '"]'); if (again) again.focus(); break;
+    case "continue-connect":
+      if (!state.connect.inst) { toast("Selecione uma instituição para continuar.", "info"); break; }
+      go("consentimento"); break;
+    case "consent-refuse":
+      state.flash = null; toast("Conexão cancelada. Nenhum dado foi compartilhado.", "info"); go("conectar"); break;
+    case "consent-accept": go("conectando"); break;
+    case "retry-connect": go("consentimento"); break;
+    case "lanc-tipo":
+      document.querySelectorAll('[data-action="lanc-tipo"]').forEach(function (b) { b.setAttribute("aria-pressed", String(b === a)); });
+      var sel = document.getElementById("m-cat");
+      sel.innerHTML = '<option value="">Sem categoria</option>' + catOptions({ tipo: a.getAttribute("data-v"), cat: null }); break;
+    case "export":
+      var fmt = a.getAttribute("data-fmt"); busy(a, "Gerando…");
+      setTimeout(function () { a.disabled = false; a.innerHTML = a.dataset.html; toast("Relatório exportado em " + fmt + ". No protótipo, o arquivo não é gerado.", "ok"); }, 900); break;
+    case "check-services":
+      busy(a, "Verificando…");
+      setTimeout(function () { state.svcCheck = new Date(); render(false); toast("Verificação concluída.", "ok"); }, 900); break;
+    case "drawer-open": openDrawer(); break;
+    case "drawer-close": closeDrawer(); break;
+    case "reset-data":
+      var sess = state.session ? state.session.role : null; resetState();
+      if (sess) loginAs(sess, true);
+      toast("Dados de exemplo restaurados.", "ok"); closeDrawer(); render(true); break;
+    case "as-role": closeDrawer(); loginAs(a.getAttribute("data-role"), false); toast("Sessão iniciada como " + state.session.nome + ".", "info"); go(state.session.role === "admin" ? "logs" : "inicio"); break;
+  }
+});
+
+document.addEventListener("change", function (e) {
+  var t = e.target;
+  if (t.matches(".cat-select")) {
+    var tx = data().transacoes.filter(function (x) { return x.id === t.getAttribute("data-tx"); })[0];
+    tx.cat = t.value || null;
+    if (!tx.cat) return;
+    toast("Categoria “" + catBy(tx.cat).nome + "” salva para “" + tx.descricao + "”.", "ok");
+    var r = txRows(); document.getElementById("tx-body").innerHTML = r.body; document.getElementById("tx-sum").innerHTML = r.sum;
+    var again = document.getElementById("cat-" + tx.id); if (again) again.focus();
+    return;
+  }
+  if (t.matches("[data-filter]") && t.tagName === "SELECT") {
+    state.filters[t.getAttribute("data-filter")] = t.value;
+    var rr = txRows(); document.getElementById("tx-body").innerHTML = rr.body; document.getElementById("tx-sum").innerHTML = rr.sum; return;
+  }
+  if (t.matches('[data-chart="periodo"]')) { state.chartPeriodo = t.value; render(false); var p = document.getElementById("g-periodo"); if (p) p.focus(); return; }
+  if (t.matches("[data-scen]")) {
+    state.scen[t.getAttribute("data-scen")] = t.checked;
+    if (t.getAttribute("data-scen") === "showReq") document.documentElement.classList.toggle("hide-annot", !t.checked);
+    if (current === "servicos") render(false);
+    toast(t.checked ? "Cenário ativado: " + t.getAttribute("data-label") : "Cenário desativado: " + t.getAttribute("data-label"), "info");
+  }
+});
+document.addEventListener("input", function (e) {
+  var t = e.target;
+  if (t.matches('[data-filter="q"]')) { state.filters.q = t.value; var r = txRows(); document.getElementById("tx-body").innerHTML = r.body; document.getElementById("tx-sum").innerHTML = r.sum; }
+  if (t.id === "c-senha") {
+    var v = t.value;
+    var len = document.querySelector('[data-rule="len"]'), mix = document.querySelector('[data-rule="mix"]');
+    len.classList.toggle("ok", v.length >= 8); mix.classList.toggle("ok", /[a-zA-Z]/.test(v) && /\d/.test(v));
+  }
+});
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Escape") {
+    if (!document.getElementById("drawer").hidden) { closeDrawer(); return; }
+    if (document.querySelector(".modal")) closeModal(false);
+  }
+});
+
+document.addEventListener("submit", function (e) {
+  var f = e.target; e.preventDefault();
+  if (f.id === "login-form") {
+    var em = document.getElementById("l-email").value.trim(), pw = document.getElementById("l-senha").value;
+    document.getElementById("login-err").hidden = true;
+    var ok = setErr("l-email", !em ? "Informe seu e-mail." : !EMAIL_RE.test(em) ? "Informe um e-mail válido, como nome@exemplo.com." : "");
+    ok = setErr("l-senha", !pw ? "Informe sua senha." : "") && ok;
+    if (!ok) return;
+    var btn = document.getElementById("l-submit"); busy(btn, "Entrando…");
+    setTimeout(function () {
+      var u = state.users.filter(function (x) { return x.email === em.toLowerCase() && x.senha === pw; })[0];
+      if (!u) {
+        log("LOGIN", false, em.toLowerCase());
+        btn.disabled = false; btn.innerHTML = btn.dataset.html;
+        document.getElementById("login-err").hidden = false;
+        document.getElementById("l-senha").value = ""; document.getElementById("l-senha").focus();
+        return;
+      }
+      state.session = { nome: u.nome, email: u.email, role: u.role };
+      if (u.role === "user" && !state.store[u.email]) state.store[u.email] = { conexoes: [], contas: [], transacoes: [] };
+      log("LOGIN", true, u.email);
+      go(u.role === "admin" ? "logs" : "inicio");
+    }, 600);
+  }
+  if (f.id === "cad-form") {
+    var nome = document.getElementById("c-nome").value.trim(), em2 = document.getElementById("c-email").value.trim().toLowerCase(), s1 = document.getElementById("c-senha").value, s2 = document.getElementById("c-conf").value, termos = document.getElementById("c-termos").checked;
+    var ok2 = setErr("c-nome", nome.length < 3 ? "Informe seu nome completo." : "");
+    ok2 = setErr("c-email", !em2 ? "Informe seu e-mail." : !EMAIL_RE.test(em2) ? "Informe um e-mail válido, como nome@exemplo.com." : state.users.some(function (x) { return x.email === em2; }) ? "Já existe uma conta com este e-mail. Entre ou use outro e-mail." : "") && ok2;
+    ok2 = setErr("c-senha", s1.length < 8 || !/[a-zA-Z]/.test(s1) || !/\d/.test(s1) ? "A senha precisa ter pelo menos 8 caracteres, com letras e números." : "") && ok2;
+    ok2 = setErr("c-conf", s2 !== s1 || !s2 ? "As senhas não são iguais." : "") && ok2;
+    ok2 = setErr("c-termos", termos ? "" : "Para criar a conta, aceite os Termos de Uso e a Política de Privacidade.") && ok2;
+    if (!ok2) { var first = f.querySelector('[aria-invalid="true"]'); if (first) first.focus(); return; }
+    state.users.push({ nome: nome, email: em2, senha: s1, role: "user" });
+    state.store[em2] = { conexoes: [], contas: [], transacoes: [] };
+    state.loginPrefill = em2;
+    state.flash = { type: "ok", title: "Conta criada", msg: "Enviamos uma confirmação para " + em2 + ". Entre com seu e-mail e senha." };
+    go("login");
+  }
+  if (f.id === "lanc-form") {
+    var tipo = document.querySelector('[data-action="lanc-tipo"][aria-pressed="true"]').getAttribute("data-v");
+    var raw = document.getElementById("m-valor").value.trim().replace(/\s/g, "").replace(/\./g, "").replace(",", ".");
+    var valor = parseFloat(raw), dt = document.getElementById("m-data").value, desc = document.getElementById("m-desc").value.trim(), cat = document.getElementById("m-cat").value || null;
+    var ok3 = setErr("m-valor", !(valor > 0) ? "Informe um valor maior que zero, como 85,00." : "");
+    ok3 = setErr("m-data", !dt ? "Informe a data do lançamento." : "") && ok3;
+    ok3 = setErr("m-desc", !desc ? "Descreva o lançamento para encontrá-lo depois." : "") && ok3;
+    if (!ok3) { var fi = f.querySelector('[aria-invalid="true"]'); if (fi) fi.focus(); return; }
+    data().transacoes.push({ id: "t" + (++state.seq), data: dt, descricao: desc, valor: Math.round(valor * 100) / 100, tipo: tipo, cat: cat, conta: null });
+    state.filters = { periodo: dt.slice(0, 7), conta: "todas", tipo: "todos", q: "" };
+    toast((tipo === "receita" ? "Receita" : "Despesa") + " de " + money(valor) + " salva. Ela já entra nos totais do início.", "ok");
+    modalOnClose = null; closeModal(true);
+    go("extrato");
+  }
+  if (f.id === "report-form") {
+    var ini = document.getElementById("r-ini").value, fim = document.getElementById("r-fim").value;
+    var err = document.getElementById("r-err");
+    if (!ini || !fim || fim < ini) { err.hidden = false; err.innerHTML = ic("alert") + "<span>" + (!ini || !fim ? "Informe as duas datas do período." : "A data final precisa ser igual ou posterior à data inicial.") + "</span>"; return; }
+    state.report = { inicio: ini, fim: fim, gerado: true };
+    render(false);
+    toast("Relatório gerado.", "ok");
+    var rep = document.getElementById("report"); if (rep) rep.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+});
+
+/* ======================= Painel do protótipo ======================= */
+document.getElementById("fab").innerHTML = ic("map") + '<span class="fab-txt">Mapa do protótipo</span>';
+document.getElementById("fab").setAttribute("aria-label", "Abrir painel do protótipo");
+function renderDrawer() {
+  var dr = document.getElementById("drawer");
+  var groups = MAP_GROUPS.map(function (g) {
+    return '<div class="group">' + esc(g.nome) + "</div>" + g.itens.map(function (t) {
+      var s = SCREENS[t];
+      return '<a class="map-link" href="#' + t + '"' + (current === t ? ' aria-current="page"' : "") + '><span class="tid">' + s.id + "</span><span>" + esc(s.nome) + '</span><span class="rq">' + s.req.join(", ") + (s.seq ? " · seq. " + s.seq : "") + "</span></a>";
+    }).join("");
+  }).join("");
+  var sw = function (k, title, sub) {
+    return '<label class="toggle"><span>' + title + (sub ? "<small>" + sub + "</small>" : "") + '</span><span class="switch"><input type="checkbox" data-scen="' + k + '" data-label="' + esc(title) + '"' + (state.scen[k] ? " checked" : "") + "><span></span></span></label>";
+  };
+  dr.innerHTML = '<div class="drawer-head"><h2>Painel do protótipo</h2><button class="modal-x" type="button" data-action="drawer-close" aria-label="Fechar painel">' + ic("x") + "</button></div>" +
+    '<p class="footnote">Este painel não faz parte do UniBank. Ele ajuda a navegar pelas telas e a simular os fluxos alternativos.</p>' +
+    "<section><h3>Mapa de telas</h3>" + groups + "</section>" +
+    "<section><h3>Cenários</h3>" +
+      sw("instFail", "Instituição não responde", "Fluxo alternativo do RF02 (mensagens 16 a 19) e erro ao atualizar dados (RF11)") +
+      sw("svcDown", "Serviço fora do ar", "Integração Open Finance indisponível na tela de status (RF14)") +
+      sw("showReq", "Mostrar identificação das telas", "Etiquetas com o código da tela e os requisitos atendidos") +
+    "</section>" +
+    "<section><h3>Acessos de demonstração</h3>" +
+      '<div class="cred">Usuário final: ana.souza@email.com / unibank123<br>Administrador: admin@unibank.com.br / admin123</div>' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-secondary btn-sm" type="button" data-action="as-role" data-role="user">Entrar como usuário final</button><button class="btn btn-secondary btn-sm" type="button" data-action="as-role" data-role="admin">Entrar como administrador</button></div>' +
+      '<button class="btn btn-ghost btn-sm" type="button" data-action="reset-data" style="justify-self:start">' + ic("refresh") + "Restaurar dados de exemplo</button>" +
+    "</section>";
+}
+function openDrawer() { var d = document.getElementById("drawer"); d.hidden = false; var b = d.querySelector("button"); if (b) b.focus(); }
+function closeDrawer() { var d = document.getElementById("drawer"); if (d.hidden) return; d.hidden = true; document.getElementById("fab").focus({ preventScroll: true }); }
+
+render(false);
+})();
+</script>
+
+</body>
+</html>

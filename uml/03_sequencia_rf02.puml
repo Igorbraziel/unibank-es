@@ -1,0 +1,47 @@
+@startuml diagrama_sequencia_rf02
+skinparam shadowing false
+skinparam defaultFontSize 14
+skinparam sequenceMessageAlign left
+skinparam responseMessageBelowArrow true
+skinparam sequence {
+  ParticipantBackgroundColor #FFFFFF
+  ParticipantBorderColor #2F3A4A
+  LifeLineBorderColor #8A94A6
+  ArrowColor #2F3A4A
+  GroupBorderColor #2F3A4A
+}
+autonumber
+
+actor "Usuário\nFinal" as U
+participant "Interface\nWeb" as UI
+participant "Conexões" as CON
+participant "Integração\nOpen Finance" as INT
+participant "c : Conexao" as C
+participant "Administração" as ADM
+participant "Instituição\nFinanceira" as IF
+
+U -> UI : seleciona instituição
+UI -> CON : conectarConta(instituicao)
+CON -> INT : solicitarAutorizacao(instituicao)
+INT -> IF : pede consentimento
+
+alt instituição responde
+  note over U, IF : o usuário autoriza o compartilhamento de dados na instituição
+  IF --> INT : token de acesso
+  INT --> CON : token
+  CON -> C ** : criar(instituicao, token)
+  CON -> C : autorizar()
+  CON -> INT : obterContas(c)
+  INT -> IF : pede contas
+  IF --> INT : contas
+  INT --> CON : contas
+  CON -> ADM : registrarLog(usuario, CONEXAO, sucesso)
+  CON --> UI : conta conectada
+  UI --> U : exibe conta conectada
+else instituição não responde
+  INT --> CON : falha
+  CON -> ADM : registrarLog(usuario, CONEXAO, falha)
+  CON --> UI : erro
+  UI --> U : mensagem clara de falha (RNF08)
+end
+@enduml

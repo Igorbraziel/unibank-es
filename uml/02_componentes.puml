@@ -1,0 +1,54 @@
+@startuml diagrama_componentes
+skinparam shadowing false
+skinparam componentStyle uml2
+skinparam defaultFontSize 14
+skinparam nodesep 50
+skinparam ranksep 50
+skinparam component {
+  BackgroundColor #FFFFFF
+  BorderColor #2F3A4A
+  ArrowColor #2F3A4A
+}
+
+actor "Usuário Final" as UF
+actor "Administrador" as ADM
+[Interface Web] as WEB
+
+() "IAutenticacao" as IAUT
+[Autenticação] as AUT
+AUT -up- IAUT
+
+() "IConexoes" as ICON
+[Conexões] as CON
+CON -up- ICON
+
+() "IFinancas" as IFIN
+[Finanças] as FIN
+FIN -up- IFIN
+
+() "IAdministracao" as IADM
+[Administração] as ADMC
+ADMC -up- IADM
+
+() "IIntegracao" as IINT
+[Integração Open Finance] as INT
+INT -up- IINT
+
+database "Banco de Dados" as DB
+cloud "Instituições Financeiras\n(API Open Finance)" as IFS
+
+UF --> WEB
+ADM --> WEB
+WEB ..> IAUT
+WEB ..> ICON
+WEB ..> IFIN
+WEB ..> IADM
+AUT ..> IADM : registra log
+CON ..> IADM : registra log
+CON ..> IINT
+INT --> IFS
+AUT --> DB
+CON --> DB
+FIN --> DB
+ADMC --> DB
+@enduml
